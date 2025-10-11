@@ -274,7 +274,7 @@ function SidebarTrigger({
       {...props}
     >
       <MenuIcon className="size-7" />
-      <span className="sr-only">Toggle Sidebar</span>
+      <span className="sr-only">サイドメニューを開閉</span>
     </Button>
   )
 }
@@ -509,7 +509,7 @@ function SidebarMenuButton({
   tooltip?: string | React.ComponentProps<typeof TooltipContent>
 } & VariantProps<typeof sidebarMenuButtonVariants>) {
   const Comp = asChild ? Slot : "button"
-  const { isMobile, state } = useSidebar()
+  const { isMobile, state, setOpenMobile } = useSidebar()
 
   const button = (
     <Comp
@@ -518,6 +518,9 @@ function SidebarMenuButton({
       data-size={size}
       data-active={isActive}
       className={cn(sidebarMenuButtonVariants({ variant, size }), className)}
+      onClick={() => {
+        isMobile && setOpenMobile(false)
+      }}
       {...props}
     />
   )
