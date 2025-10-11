@@ -41,7 +41,12 @@ const items = [
   },
   {
     title: "おつまみ・珍味",
-    url: "#",
+    url: "/catalog/category/otsumami",
+    icon: Inbox,
+  },
+  {
+    title: "鯖なれずし",
+    url: "/catalog/category/saba-no-narezushi",
     icon: Inbox,
   },
   {
