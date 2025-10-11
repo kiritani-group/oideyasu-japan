@@ -1,3 +1,4 @@
+import "@/app/globals.css"
 import { AppSidebar } from "@/components/layout/app-sidevar"
 import {
   SidebarInset,
@@ -7,7 +8,6 @@ import {
 import type { Metadata } from "next"
 import { Noto_Sans_JP } from "next/font/google"
 import Link from "next/link"
-import "../globals.css"
 
 const notoSansJp = Noto_Sans_JP({
   subsets: ["latin"],
