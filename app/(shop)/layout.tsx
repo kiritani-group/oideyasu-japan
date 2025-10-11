@@ -1,14 +1,15 @@
+import { AppSidebar } from "@/components/layout/app-sidevar"
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar"
 import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
+import { Noto_Sans_JP } from "next/font/google"
+import Link from "next/link"
 import "../globals.css"
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-})
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const notoSansJp = Noto_Sans_JP({
   subsets: ["latin"],
 })
 
@@ -24,10 +25,22 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <body className={`${notoSansJp.className} antialiased`}>
+        <SidebarProvider>
+          <SidebarInset>
+            <header className="bg-background/50 sticky top-0 z-50 flex h-12 items-center justify-between border-b px-4 backdrop-blur-sm">
+              <h1 className="text-lg font-bold">旬菜鮮魚と炭火焼 おいで康</h1>
+              <SidebarTrigger />
+            </header>
+            <main className="@container flex-1">{children}</main>
+            <footer className="flex flex-col items-center justify-center border-t p-6">
+              <p>© 旬菜鮮魚と炭火焼 おいで康</p>
+              <Link href="tel:0776280828">0776-28-0828</Link>
+              <p>福井県福井市堀ノ宮1-325</p>
+            </footer>
+          </SidebarInset>
+          <AppSidebar />
+        </SidebarProvider>
       </body>
     </html>
   )
