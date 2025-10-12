@@ -1,7 +1,13 @@
-export default function Home() {
+import PageTitle from "@/components/page/page-title"
+
+export default function Page() {
   return (
-    <div className="grid min-h-screen grid-rows-[20px_1fr_20px] items-center justify-items-center gap-16 p-8 pb-20 font-sans sm:p-20">
-      トップページ
-    </div>
+    <>
+      <PageTitle title="トップページ" subTitle="旬菜鮮魚と炭火焼 おいで康" />
+      <div className="p-6 text-center">
+        準備中
+        <p>通販をトップページに配置するかどうか</p>
+      </div>
+    </>
   )
 }
