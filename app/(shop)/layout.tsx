@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/sidebar"
 import type { Metadata } from "next"
 import { Noto_Sans_JP } from "next/font/google"
+import Image from "next/image"
 import Link from "next/link"
 
 const notoSansJp = Noto_Sans_JP({
@@ -32,7 +33,19 @@ export default function RootLayout({
               <h1 className="text-lg font-bold">旬菜鮮魚と炭火焼 おいで康</h1>
               <SidebarTrigger />
             </header>
-            <main className="@container flex-1">{children}</main>
+            <main className="@container relative flex-1">
+              <div className="absolute inset-0 z-0">
+                <Image
+                  src="/traditional-japanese-ocean-waves-water-surface-tex.jpg"
+                  alt="背景画像"
+                  fill
+                  className="object-cover opacity-20 transition-opacity delay-500 duration-1000 starting:opacity-0"
+                  priority
+                />
+                <div className="from-background/80 via-background/60 to-background/90 absolute inset-0 bg-gradient-to-b" />
+              </div>
+              <div className="relative z-10 mx-auto max-w-5xl">{children}</div>
+            </main>
             <footer className="flex flex-col items-center justify-center border-t p-6">
               <p>© 旬菜鮮魚と炭火焼 おいで康</p>
               <Link href="tel:0776280828">0776-28-0828</Link>
