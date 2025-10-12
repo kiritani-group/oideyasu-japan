@@ -12,6 +12,7 @@ export default function Page() {
         <Image
           src={Narezushi}
           alt="鯖のなれずし"
+          priority
           fill
           className="z-0 object-cover"
         />

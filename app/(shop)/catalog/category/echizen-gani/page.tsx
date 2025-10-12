@@ -10,6 +10,7 @@ export default function Page() {
         <Image
           src={Echizengani}
           alt="越前がに"
+          priority
           fill
           className="z-0 object-cover"
         />

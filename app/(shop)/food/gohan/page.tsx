@@ -29,6 +29,7 @@ export default function Page() {
             <Image
               src={Panf}
               alt="パンフレット"
+              priority
               fill
               className="z-0 object-cover"
             />

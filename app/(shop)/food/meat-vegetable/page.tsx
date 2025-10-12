@@ -30,6 +30,7 @@ export default function Page() {
             <Image
               src={Daruma}
               alt="だるま"
+              priority
               fill
               className="z-0 object-cover"
             />
