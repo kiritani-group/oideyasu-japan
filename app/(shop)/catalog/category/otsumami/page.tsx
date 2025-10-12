@@ -1,6 +1,11 @@
 import PageTitle from "@/components/page/page-title"
+import type { Metadata } from "next"
 import ItemsGrid from "../../_components/items-grid"
 import { otsumamiItems } from "../items"
+
+export const metadata: Metadata = {
+  title: "おつまみ・珍味 通販くらぶ",
+}
 
 export default function Page() {
   return (

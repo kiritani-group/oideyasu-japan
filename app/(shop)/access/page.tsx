@@ -1,4 +1,9 @@
 import PageTitle from "@/components/page/page-title"
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "アクセス・お問い合わせ",
+}
 
 export default function Page() {
   return (

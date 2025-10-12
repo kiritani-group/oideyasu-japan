@@ -17,7 +17,10 @@ const notoSansJp = Noto_Sans_JP({
 })
 
 export const metadata: Metadata = {
-  title: "おいで康 旬菜鮮魚と炭火焼き - 福井 居酒屋 魚 かに 宴会",
+  title: {
+    template: "%s | おいで康 福井 居酒屋 魚 かに 宴会",
+    default: "おいで康 旬菜鮮魚と炭火焼き - 福井 居酒屋 魚 かに 宴会",
+  },
   description:
     "魚が美味しい福井の居酒屋 おいで康。女子会 宴会 歓送迎会 忘新年会 飲み放題など、様々なシーンにお応えします。",
   icons: {
