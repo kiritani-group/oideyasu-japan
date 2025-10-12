@@ -68,7 +68,7 @@ const menus = [
   },
   {
     title: "定番おしながき",
-    url: "/food/teigan",
+    url: "/food/teiban",
   },
 ]
 
