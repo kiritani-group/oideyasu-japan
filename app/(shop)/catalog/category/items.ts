@@ -1,5 +1,8 @@
 import Amaebi from "@/public/catalog-thumbnails/amaebi.jpg"
 import Hatahata from "@/public/catalog-thumbnails/hatahata.jpg"
+import Kani3 from "@/public/catalog-thumbnails/kani-3.jpg"
+import Kani5 from "@/public/catalog-thumbnails/kani-5.jpg"
+import KaniL from "@/public/catalog-thumbnails/kani-L.jpg"
 import KareiSurume1 from "@/public/catalog-thumbnails/karei-no-surume-1.jpg"
 import KareiSurume3 from "@/public/catalog-thumbnails/karei-no-surume-3.jpg"
 import SabaL from "@/public/catalog-thumbnails/saba-no-narezushi-L.jpg"
@@ -72,6 +75,39 @@ export const otsumamiItems = [
       "甘い甘い越前の海の甘海老です。熱風乾燥にて美味しさを閉じ込めました。そのまま殻ごと召し上がれ！甘みと香ばしさがお口いっぱいにひろがります。20グラム入りです。",
     imageSrc: Amaebi,
     price: 648,
+    url: "#",
+  },
+]
+
+export const kaniItems = [
+  {
+    title: "越前がに 大",
+    description: "海の状況により、お待ちいただく場合があります。",
+    imageSrc: KaniL,
+    price: 30000,
+    url: "#",
+  },
+  {
+    title: "越前がに 中",
+    description: "海の状況により、お待ちいただく場合があります。",
+    imageSrc: KaniL,
+    price: 18000,
+    url: "#",
+  },
+  {
+    title: "越前がに メス せいこがに 5はいセット",
+    description:
+      "大サイズ5はいセットのメスの『せいこがに』です。甲羅の内子と外子の味わいは『せいこがに』にしかない味わいです。海の状況により、お待ちいただく場合があります。",
+    imageSrc: Kani5,
+    price: 15000,
+    url: "#",
+  },
+  {
+    title: "越前がに 抱き合わせセット",
+    description:
+      "越前がにのオス1ぱいとメス2はいの抱き合わせセットです。海の状況により、お待ちいただく場合があります。",
+    imageSrc: Kani3,
+    price: 22000,
     url: "#",
   },
 ]

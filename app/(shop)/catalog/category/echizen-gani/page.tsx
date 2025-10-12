@@ -1,6 +1,8 @@
 import PageTitle from "@/components/page/page-title"
 import Echizengani from "@/public/echizen-gani.jpg"
 import Image from "next/image"
+import ItemsGrid from "../../_components/items-grid"
+import { kaniItems } from "../items"
 
 export default function Page() {
   return (
@@ -33,10 +35,9 @@ export default function Page() {
           </div>
         </div>
       </div>
-      {/* <section className="mx-2 my-10">
-        <ItemsGrid items={sabaItems} />
-      </section> */}
-      <div className="p-6 pb-12 text-center">準備中</div>
+      <section className="mx-2 my-10">
+        <ItemsGrid items={kaniItems} />
+      </section>
     </>
   )
 }
