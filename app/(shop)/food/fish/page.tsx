@@ -5,7 +5,7 @@ import Image from "next/image"
 
 const items = [
   { name: "地物天然 岩がき １ヶ", price: 580 },
-  { name: "鮮鮮 さば刺し", price: 800 },
+  { name: "新鮮 さば刺し", price: 800 },
   { name: "美味 あじ", price: 800 },
   { name: "きも醤油 かわはぎ", price: 800 },
   { name: "甘みの 車鯛", price: 800 },
@@ -33,7 +33,13 @@ export default function Page() {
       <div className="mx-2 my-10 grid grid-cols-1 gap-8 @2xl:grid-cols-2">
         <div className="grid gap-4">
           <div className="relative aspect-square translate-y-0 overflow-hidden rounded-lg opacity-100 shadow-lg transition-all duration-1000 starting:translate-y-3 starting:opacity-0">
-            <Image src={Ebi} alt="エビ" fill className="z-0 object-cover" />
+            <Image
+              src={Ebi}
+              alt="エビ"
+              priority
+              fill
+              className="z-0 object-cover"
+            />
             <div className="pointer-events-none absolute bottom-0 z-0 w-full bg-gradient-to-t from-black/100 via-black/80 to-black/0 px-4 pt-18 pb-4 text-white">
               福井は越前海岸に面した魚の宝庫です。海の恵みを追い求めて自ら海岸線を奔走し漁師さんから直接厳選仕入れしています。美味しいお魚たちをぜひご賞味あ～れ～！！
             </div>
