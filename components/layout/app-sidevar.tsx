@@ -22,12 +22,17 @@ import {
 const plans = [
   {
     title: "女子会・ママ会",
-    url: "#",
+    url: "/plan/joshikai",
     icon: Home,
   },
   {
-    title: "宴会・飲み放題",
-    url: "#",
+    title: "宴会コース",
+    url: "/plan/enkai",
+    icon: Inbox,
+  },
+  {
+    title: "飲み放題",
+    url: "/plan/nomihoudai",
     icon: Inbox,
   },
 ]
@@ -51,7 +56,7 @@ const items = [
   },
   {
     title: "越前がに",
-    url: "#",
+    url: "/catalog/category/echizen-gani",
     icon: Home,
   },
 ]
