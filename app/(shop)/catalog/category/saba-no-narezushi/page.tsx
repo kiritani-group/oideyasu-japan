@@ -1,13 +1,13 @@
+import PageTitle from "@/components/page/page-title"
 import Narezushi from "@/public/saba-no-narezushi.jpg"
 import Image from "next/image"
 import ItemsGrid from "../../_components/items-grid"
-import PageTitle from "../../_components/page-title"
 import { sabaItems } from "../items"
 
 export default function Page() {
   return (
     <>
-      <PageTitle title="鯖なれずし" />
+      <PageTitle title="お取り寄せ - 通販くらぶ" subTitle="鯖なれずし" />
       <div className="relative mx-2 my-10 translate-y-0 overflow-hidden rounded-lg p-6 opacity-100 shadow-lg transition-all duration-1000 sm:p-8 lg:p-10 starting:translate-y-3 starting:opacity-0">
         <Image
           src={Narezushi}
