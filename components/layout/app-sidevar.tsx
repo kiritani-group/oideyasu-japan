@@ -1,5 +1,3 @@
-import { ChevronDown, Home, Inbox, MapPin } from "lucide-react"
-
 import {
   Sidebar,
   SidebarContent,
@@ -11,6 +9,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { ArrowRight, ChevronDown, MapPin } from "lucide-react"
 import Link from "next/link"
 import {
   Collapsible,
@@ -23,17 +22,14 @@ const plans = [
   {
     title: "女子会・ママ会",
     url: "/plan/joshikai",
-    icon: Home,
   },
   {
     title: "宴会コース",
     url: "/plan/enkai",
-    icon: Inbox,
   },
   {
     title: "飲み放題",
     url: "/plan/nomihoudai",
-    icon: Inbox,
   },
 ]
 
@@ -42,22 +38,18 @@ const items = [
   {
     title: "商品一覧",
     url: "/catalog",
-    icon: Inbox,
   },
   {
     title: "おつまみ・珍味",
     url: "/catalog/category/otsumami",
-    icon: Inbox,
   },
   {
     title: "鯖なれずし",
     url: "/catalog/category/saba-no-narezushi",
-    icon: Inbox,
   },
   {
     title: "越前がに",
     url: "/catalog/category/echizen-gani",
-    icon: Home,
   },
 ]
 
@@ -65,23 +57,19 @@ const items = [
 const menus = [
   {
     title: "獲れたてのお魚",
-    url: "#",
-    icon: Inbox,
+    url: "/food/fish",
   },
   {
-    title: "激戦お肉と季節の山野菜",
-    url: "#",
-    icon: Home,
+    title: "厳選お肉と季節の山野菜",
+    url: "/food/meat-vegetable",
   },
   {
     title: "おいしいご飯",
-    url: "#",
-    icon: Home,
+    url: "/food/gohan",
   },
   {
     title: "定番おしながき",
-    url: "#",
-    icon: Home,
+    url: "/food/teigan",
   },
 ]
 
@@ -89,55 +77,25 @@ const menus = [
 const drinks = [
   {
     title: "和の果実酒",
-    url: "#",
-    icon: Inbox,
+    url: "/drink/kajitushu",
   },
   {
     title: "梅酒飲みくらべ",
-    url: "#",
-    icon: Home,
+    url: "/drink/umeshu",
   },
   {
     title: "焼酎ラインナップ",
-    url: "#",
-    icon: Home,
+    url: "/drink/syochu",
   },
   {
     title: "おすすめ日本酒",
-    url: "#",
-    icon: Home,
+    url: "/drink/nihonshu",
   },
 ]
 export function AppSidebar() {
   return (
     <Sidebar side="right">
       <SidebarContent>
-        <Collapsible defaultOpen className="group/collapsible">
-          <SidebarGroup>
-            <SidebarGroupLabel asChild>
-              <CollapsibleTrigger>
-                コース・プラン
-                <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
-              </CollapsibleTrigger>
-            </SidebarGroupLabel>
-            <CollapsibleContent>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  {plans.map((item) => (
-                    <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton asChild>
-                        <Link href={item.url}>
-                          <item.icon />
-                          <span>{item.title}</span>
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  ))}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </CollapsibleContent>
-          </SidebarGroup>
-        </Collapsible>
         <Collapsible defaultOpen className="group/collapsible">
           <SidebarGroup>
             <SidebarGroupLabel asChild>
@@ -153,7 +111,7 @@ export function AppSidebar() {
                     <SidebarMenuItem key={item.title}>
                       <SidebarMenuButton asChild>
                         <Link href={item.url}>
-                          <item.icon />
+                          <ArrowRight />
                           <span>{item.title}</span>
                         </Link>
                       </SidebarMenuButton>
@@ -164,7 +122,7 @@ export function AppSidebar() {
             </CollapsibleContent>
           </SidebarGroup>
         </Collapsible>
-        <Collapsible defaultOpen={false} className="group/collapsible">
+        <Collapsible defaultOpen className="group/collapsible">
           <SidebarGroup>
             <SidebarGroupLabel asChild>
               <CollapsibleTrigger>
@@ -179,7 +137,7 @@ export function AppSidebar() {
                     <SidebarMenuItem key={item.title}>
                       <SidebarMenuButton asChild>
                         <Link href={item.url}>
-                          <item.icon />
+                          <ArrowRight />
                           <span>{item.title}</span>
                         </Link>
                       </SidebarMenuButton>
@@ -205,7 +163,33 @@ export function AppSidebar() {
                     <SidebarMenuItem key={item.title}>
                       <SidebarMenuButton asChild>
                         <Link href={item.url}>
-                          <item.icon />
+                          <ArrowRight />
+                          <span>{item.title}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </CollapsibleContent>
+          </SidebarGroup>
+        </Collapsible>
+        <Collapsible defaultOpen={false} className="group/collapsible">
+          <SidebarGroup>
+            <SidebarGroupLabel asChild>
+              <CollapsibleTrigger>
+                コース・プラン
+                <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
+              </CollapsibleTrigger>
+            </SidebarGroupLabel>
+            <CollapsibleContent>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {plans.map((item) => (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton asChild>
+                        <Link href={item.url}>
+                          <ArrowRight />
                           <span>{item.title}</span>
                         </Link>
                       </SidebarMenuButton>
