@@ -54,7 +54,7 @@ export default function Page() {
           <table className="w-full">
             <tbody>
               {items.map((item) => (
-                <tr key={item.name} className="w-full border-b">
+                <tr key={item.name} className="w-full not-last:border-b">
                   <td className="py-2">{item.name}</td>
                   <td className="py-2 text-end">
                     &yen;{item.price.toLocaleString()}

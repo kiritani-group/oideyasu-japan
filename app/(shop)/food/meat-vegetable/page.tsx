@@ -27,7 +27,12 @@ export default function Page() {
       <div className="mx-2 my-10 grid grid-cols-1 gap-8 @2xl:grid-cols-2">
         <div className="grid gap-4">
           <div className="relative aspect-square translate-y-0 overflow-hidden rounded-lg opacity-100 shadow-lg transition-all duration-1000 starting:translate-y-3 starting:opacity-0">
-            <Image src={Daruma} alt="だるま" fill className="z-0 object-cover" />
+            <Image
+              src={Daruma}
+              alt="だるま"
+              fill
+              className="z-0 object-cover"
+            />
             <div className="pointer-events-none absolute bottom-0 z-0 w-full bg-gradient-to-t from-black/100 via-black/80 to-black/0 px-4 pt-18 pb-4 text-white">
               厳選されたお肉や山菜・旬の地野菜などなど、こだわりの炭火焼き、こだわりの料理でおもてなしさせていただきます。お楽しみください
             </div>
@@ -48,7 +53,7 @@ export default function Page() {
           <table className="w-full">
             <tbody>
               {items.map((item) => (
-                <tr key={item.name} className="w-full border-b">
+                <tr key={item.name} className="w-full not-last:border-b">
                   <td className="py-2">{item.name}</td>
                   <td className="py-2 text-end">
                     &yen;{item.price.toLocaleString()}
