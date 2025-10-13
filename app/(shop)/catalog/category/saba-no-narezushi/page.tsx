@@ -2,8 +2,8 @@ import PageTitle from "@/components/page/page-title"
 import Narezushi from "@/public/saba-no-narezushi.jpg"
 import type { Metadata } from "next"
 import Image from "next/image"
+import { products } from "@/data/products"
 import ItemsGrid from "../../_components/items-grid"
-import { products } from "../items"
 
 export const metadata: Metadata = {
   title: "鯖なれずし 通販くらぶ",
