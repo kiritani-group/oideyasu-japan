@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils"
 import Image from "next/image"
 import Link from "next/link"
-import type { Product } from "../category/items"
+import type { Product } from "../../../../data/products"
 
 export default function ItemsGrid({ items }: { items: Product[] }) {
   const delay = [
@@ -51,7 +51,7 @@ export default function ItemsGrid({ items }: { items: Product[] }) {
       {items.map((item, index) => (
         <Link
           key={item.id}
-          href={item.url}
+          href={`/catalog/${item.slug}`}
           className={cn(
             "translate-y-0 space-y-1.5 opacity-100 transition-all duration-1000 starting:translate-y-3 starting:opacity-0",
             index < 10 ? delay[index].value : "delay-1000",
@@ -59,14 +59,14 @@ export default function ItemsGrid({ items }: { items: Product[] }) {
         >
           <div className="relative aspect-square overflow-hidden rounded-sm">
             <Image
-              src={item.imageSrc}
+              src={item.thumbnail}
               alt={`「${item.title}」の商品画像`}
               sizes="300px"
               fill
               className="z-10 object-contain"
             />
             <Image
-              src={item.imageSrc}
+              src={item.thumbnail}
               alt="ぼかし画像"
               quality={5}
               sizes="300px"
