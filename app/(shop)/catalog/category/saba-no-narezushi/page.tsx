@@ -3,13 +3,14 @@ import Narezushi from "@/public/saba-no-narezushi.jpg"
 import type { Metadata } from "next"
 import Image from "next/image"
 import ItemsGrid from "../../_components/items-grid"
-import { sabaItems } from "../items"
+import { products } from "../items"
 
 export const metadata: Metadata = {
   title: "鯖なれずし 通販くらぶ",
 }
 
 export default function Page() {
+  const sabaItems = products.filter((item) => item.category === "SABA")
   return (
     <>
       <PageTitle title="お取り寄せ - 通販くらぶ" subTitle="鯖なれずし" />
