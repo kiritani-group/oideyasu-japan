@@ -16,6 +16,8 @@ export default function ProductImages({ product }: { product: Product }) {
             <Image
               src={product.images[selectedImage]}
               alt={product.title}
+              priority
+              fetchPriority="high"
               className="h-full w-full object-contain"
             />
           ) : (
@@ -39,8 +41,9 @@ export default function ProductImages({ product }: { product: Product }) {
               )}
             >
               <Image
-                src={image || "/placeholder.svg"}
+                src={image}
                 alt={`${product.title} view ${index + 1}`}
+                sizes="30vw"
                 className={cn(
                   "h-full w-full object-cover",
                   selectedImage !== index && "opacity-50",
