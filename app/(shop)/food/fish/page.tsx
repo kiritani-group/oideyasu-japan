@@ -38,6 +38,7 @@ export default function Page() {
               alt="エビ"
               priority
               fill
+              placeholder="blur"
               className="z-0 object-cover"
             />
             <div className="pointer-events-none absolute bottom-0 z-0 w-full bg-gradient-to-t from-black/100 via-black/80 to-black/0 px-4 pt-18 pb-4 text-white">
