@@ -1,8 +1,8 @@
 import PageTitle from "@/components/page/page-title"
+import { products } from "@/data/products"
 import Narezushi from "@/public/saba-no-narezushi.jpg"
 import type { Metadata } from "next"
 import Image from "next/image"
-import { products } from "@/data/products"
 import ItemsGrid from "../../_components/items-grid"
 
 export const metadata: Metadata = {
@@ -22,7 +22,7 @@ export default function Page() {
           fill
           className="z-0 object-cover"
         />
-        <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-l from-black/80 via-black/80 to-black/80 @3xl:via-black/75 @3xl:to-black/0" />{" "}
+        <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-r from-black/80 via-black/80 to-black/80 transition-colors delay-700 duration-700 @3xl:via-black/75 @3xl:to-black/0 starting:from-black starting:via-black starting:to-black" />
         <div className="relative z-10 text-white @3xl:ml-auto @3xl:w-1/2">
           <h2 className="mb-4 text-xl tracking-wide @3xl:text-2xl">
             鯖なれずし
