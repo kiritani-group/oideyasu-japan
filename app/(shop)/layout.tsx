@@ -68,7 +68,7 @@ export default function RootLayout({
                   className="object-cover opacity-20 transition-opacity delay-500 duration-1000 starting:opacity-0"
                   priority
                 />
-                <div className="from-background/80 via-background/60 to-background/90 absolute inset-0 bg-gradient-to-b" />
+                <div className="from-background/80 via-background/60 to-background/90 absolute inset-0 bg-linear-to-b bg-gradient-to-b" />
               </div>
               <div className="relative z-10 mx-auto max-w-5xl">{children}</div>
             </main>
