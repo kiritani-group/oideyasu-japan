@@ -47,7 +47,7 @@ export default function ItemsGrid({ items }: { items: Product[] }) {
     },
   ]
   return (
-    <div className="grid grid-cols-2 gap-x-2 gap-y-6 @2xl:grid-cols-[repeat(auto-fill,_minmax(16rem,_1fr))] @2xl:gap-x-4">
+    <div className="grid grid-cols-2 gap-x-2 gap-y-6 @2xl:grid-cols-[repeat(auto-fill,minmax(16rem,1fr))] @2xl:gap-x-4">
       {items.map((item, index) => (
         <Link
           key={item.id}
