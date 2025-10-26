@@ -22,6 +22,7 @@ export default function ProductImages({ product }: { product: Product }) {
       {/* Price */}
       <div className="text-foreground text-2xl font-bold">
         ¥{product.price.toLocaleString()}
+        <span className="text-base">（税込み）</span>
       </div>
 
       {/* Description */}
