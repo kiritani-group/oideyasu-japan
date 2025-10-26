@@ -7,7 +7,7 @@ export default function PageTitle({
 }) {
   return (
     <div className="my-10 px-4 text-center">
-      <div className="border-foreground/40 mb-2 inline-block border-b-1 pb-2">
+      <div className="border-foreground/40 mb-2 inline-block border-b pb-2">
         <h1 className="text-muted-foreground text-[clamp(1.5rem,4cqw,2.5rem)] tracking-wider">
           {title}
         </h1>
