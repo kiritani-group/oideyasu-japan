@@ -49,14 +49,14 @@ export default function ProductImages({ product }: { product: Product }) {
             </span>
           </div>
           {product.price < 10000 && (
-            <div className="text-end">
-              <p className="font-medium">
-                ※1 税込み10000円以上の購入で送料無料！！
-              </p>
-              <p className="text-muted-foreground">
-                ※2 地域によっては追加送料がかかる場合があります
-              </p>
-            </div>
+            <ul className="list-none space-y-1 pt-2 [counter-reset:note]">
+              <li className="relative pl-7 font-medium [counter-increment:note] before:absolute before:left-0 before:content-['※'counter(note)]">
+                税込み10000円以上の購入で送料無料！！
+              </li>
+              <li className="relative pl-7 [counter-increment:note] before:absolute before:left-0 before:content-['※'counter(note)]">
+                地域によっては追加送料がかかる場合があります
+              </li>
+            </ul>
           )}
         </div>
       </Card>
