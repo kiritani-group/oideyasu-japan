@@ -46,6 +46,7 @@ export default function RootLayout({
                     src={Logo}
                     alt="おいで康のロゴ"
                     fill
+                    sizes="48px"
                     className="rounded-full object-cover"
                   />
                 </div>
