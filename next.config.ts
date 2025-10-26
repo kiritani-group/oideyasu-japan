@@ -53,6 +53,10 @@ const redirectsList = [
 ]
 
 const nextConfig: NextConfig = {
+  cacheComponents: true,
+  images: {
+    qualities: [5, 75],
+  },
   async redirects() {
     return redirectsList.flatMap(({ source, destination }) => [
       {
