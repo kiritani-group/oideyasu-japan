@@ -1,5 +1,3 @@
-"use cache"
-
 import PageTitle from "@/components/page/page-title"
 import { products } from "@/data/products"
 import type { Metadata } from "next"
@@ -19,7 +17,6 @@ export async function generateStaticParams() {
 }
 
 export default async function Page(props: PageProps<"/catalog/[slug]">) {
-  cacheLife("hours")
   const { slug } = await props.params
   const product = products.find((item) => item.slug === slug)
   if (!product) notFound()
