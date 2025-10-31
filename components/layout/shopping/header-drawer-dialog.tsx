@@ -35,9 +35,7 @@ export default function ShoppingCartDrawerDialog() {
     return (
       <Drawer open={open} onOpenChange={setOpen}>
         <DrawerTrigger asChild>
-          <Button variant="ghost" size="icon" className="size-8">
-            <ShoppingCart className="size-6" />
-          </Button>
+          <ShoppingCart className="size-6" />
         </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader className="text-left">
@@ -56,8 +54,10 @@ export default function ShoppingCartDrawerDialog() {
   }
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
-        <ShoppingCart />
+      <DialogTrigger asChild>
+        <Button variant="ghost" size="icon" className="size-8">
+          <ShoppingCart className="size-6" />
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
