@@ -34,8 +34,10 @@ export default function ShoppingCartDrawerDialog() {
   if (isMobile) {
     return (
       <Drawer open={open} onOpenChange={setOpen}>
-        <DrawerTrigger>
-          <ShoppingCart />
+        <DrawerTrigger asChild>
+          <Button variant="ghost" size="icon" className="size-8">
+            <ShoppingCart className="size-6" />
+          </Button>
         </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader className="text-left">
