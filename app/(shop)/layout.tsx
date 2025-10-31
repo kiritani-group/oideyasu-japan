@@ -73,7 +73,7 @@ export default function RootLayout({
               </div>
               <div className="relative z-10 mx-auto max-w-5xl">{children}</div>
             </main>
-            <footer className="flex flex-col items-center justify-center border-t p-6">
+            <footer className="text-foreground/70 flex flex-col items-center justify-center border-t p-6">
               <p>© 旬菜鮮魚と炭火焼 おいで康</p>
               <Link href="tel:0776280828">0776-28-0828</Link>
               <p>福井県福井市堀ノ宮1-325</p>
