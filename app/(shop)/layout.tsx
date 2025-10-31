@@ -1,4 +1,3 @@
-import "@/app/globals.css"
 import { AppSidebar } from "@/components/layout/app-sidevar"
 import ShoppingCartDrawerDialog from "@/components/layout/shopping/header-drawer-dialog"
 import {
@@ -11,6 +10,7 @@ import type { Metadata } from "next"
 import { Noto_Sans_JP } from "next/font/google"
 import Image from "next/image"
 import Link from "next/link"
+import "../globals.css"
 
 const notoSansJp = Noto_Sans_JP({
   subsets: ["latin"],
@@ -55,9 +55,9 @@ export default function RootLayout({
                   おいで康
                 </h1>
               </Link>
-              <div className="gap- flex items-center gap-2">
+              <div className="flex items-center gap-2">
                 <ShoppingCartDrawerDialog />
-                <SidebarTrigger className="mr-2" />
+                <SidebarTrigger className="size-8" />
               </div>
             </header>
             <main className="@container relative flex-1">
