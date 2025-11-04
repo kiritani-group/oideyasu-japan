@@ -1,3 +1,4 @@
+import "@/app/globals.css"
 import { AppSidebar } from "@/components/layout/app-sidevar"
 import ShoppingCartDrawerDialog from "@/components/layout/shopping/header-drawer-dialog"
 import {
@@ -10,7 +11,6 @@ import type { Metadata } from "next"
 import { Noto_Sans_JP } from "next/font/google"
 import Image from "next/image"
 import Link from "next/link"
-import "../globals.css"
 
 const notoSansJp = Noto_Sans_JP({
   subsets: ["latin"],
@@ -35,7 +35,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="ja">
       <body className={`${notoSansJp.className} antialiased`}>
         <SidebarProvider>
           <SidebarInset>
