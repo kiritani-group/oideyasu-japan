@@ -1,6 +1,7 @@
 model User {
   id            String    @id @default(cuid())
   name          String
+  role          Role      @default(USER)
   email         String?   @unique
   emailVerified Boolean   @default(false)
   image         String?
@@ -8,6 +9,11 @@ model User {
   updatedAt     DateTime  @default(now()) @updatedAt
   sessions      Session[]
   accounts      Account[]
+}
+
+enum Role {
+  USER
+  ADMIN
 }
 
 model Session {
