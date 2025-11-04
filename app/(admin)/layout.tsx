@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/sidebar"
 import type { Metadata } from "next"
 import { Noto_Sans_JP } from "next/font/google"
+import Breadcrumbs from "./_breadcrumbs"
 
 const notoSansJp = Noto_Sans_JP({
   subsets: ["latin"],
@@ -34,8 +35,9 @@ export default function RootLayout({
         <SidebarProvider>
           <AppSidebar />
           <SidebarInset>
-            <header className="bg-background/50 sticky top-0 z-50 flex h-14 items-center justify-between border-b px-2 backdrop-blur-sm">
+            <header className="bg-background/50 sticky top-0 z-50 flex h-14 items-center gap-2 border-b px-2 backdrop-blur-sm">
               <AdminSidebarTrigger className="md:hidden" />
+              <Breadcrumbs />
             </header>
             <main className="@container relative flex-1 bg-sky-200/10">
               <div className="relative z-10 mx-auto max-w-5xl">{children}</div>
