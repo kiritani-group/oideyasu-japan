@@ -3,12 +3,38 @@ import { prismaAdapter } from "better-auth/adapters/prisma"
 import { nextCookies } from "better-auth/next-js"
 import { magicLink } from "better-auth/plugins"
 import { createTransport } from "nodemailer"
+import { Role } from "./generated/prisma/enums"
 import prisma from "./prisma"
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),
+  session: {
+    cookieCache: {
+      enabled: true,
+      maxAge: 10 * 60,
+    },
+  },
+  account: {
+    accountLinking: {
+      enabled: true,
+      trustedProviders: ["google", "line", "apple"],
+    },
+  },
+  user: {
+    additionalFields: {
+      role: {
+        type: Object.values(Role),
+      },
+    },
+  },
+  socialProviders: {
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+    },
+  },
   plugins: [
     magicLink({
       sendMagicLink: async ({ email, url }) => {
