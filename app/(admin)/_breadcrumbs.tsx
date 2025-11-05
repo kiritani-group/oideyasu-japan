@@ -70,7 +70,7 @@ function getReadableLabel(segment: string, prev?: string): string {
   if (prev === "product") {
     if (isId(segment)) return "商品詳細"
   }
-  
+
   // 長いIDなどは「詳細」とする
   if (segment.length > 20) return "詳細"
 
@@ -86,6 +86,7 @@ const labelMap: Record<string, string> = {
   order: "注文管理",
   product: "商品管理",
   setting: "設定",
+  create: "新規作成",
 }
 
 /**
