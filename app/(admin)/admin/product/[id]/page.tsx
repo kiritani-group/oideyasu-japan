@@ -1,10 +1,20 @@
-import { Card } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import { auth } from "@/lib/auth"
 import prisma from "@/lib/prisma"
 import {
   ArrowLeft,
   Box,
   FolderOpen,
+  Globe,
   JapaneseYen,
   Package,
   Star,
@@ -12,8 +22,9 @@ import {
 import { headers } from "next/headers"
 import Link from "next/link"
 import { notFound, redirect } from "next/navigation"
+import EditStock from "./_components/edit-stock"
 
-export default async function Page(props: PageProps<"/admin/user/[id]">) {
+export default async function Page(props: PageProps<"/admin/product/[id]">) {
   const session = await auth.api.getSession({
     headers: await headers(),
   })
@@ -25,6 +36,7 @@ export default async function Page(props: PageProps<"/admin/user/[id]">) {
     where: { id },
     include: { category: { select: { name: true } } },
   })
+  const now = new Date().getTime()
   if (!product) notFound()
   return (
     <>
@@ -52,15 +64,32 @@ export default async function Page(props: PageProps<"/admin/user/[id]">) {
           {/* Main Customer Card */}
           <div className="@2xl:col-span-2">
             <Card className="space-y-2 p-6">
-              <div className="flex items-start justify-between">
-                <div>
-                  <h2 className="text-foreground text-2xl font-bold">
-                    {product.name || "未設定"}
-                  </h2>
-                  <p className="text-muted-foreground mt-1 text-sm">
-                    商品ID: {product.id}
-                  </p>
-                </div>
+              <div className="flex items-start justify-between gap-1.5">
+                <h2 className="text-foreground text-2xl font-bold text-wrap">
+                  {product.name || "未設定"}
+                </h2>
+                <Badge
+                  variant={
+                    product.deletedAt
+                      ? "destructive"
+                      : product.isActive
+                        ? "secondary"
+                        : "secondary"
+                  }
+                  className={
+                    product.deletedAt
+                      ? ""
+                      : product.isActive
+                        ? "bg-green-500 text-white"
+                        : "secondary"
+                  }
+                >
+                  {product.deletedAt
+                    ? "削除済み"
+                    : product.isActive
+                      ? "HP掲載"
+                      : "非公開"}
+                </Badge>
               </div>
 
               <div className="space-y-3">
@@ -73,9 +102,22 @@ export default async function Page(props: PageProps<"/admin/user/[id]">) {
                     </span>
                   </div>
                   <div className="flex items-center gap-3 text-sm">
+                    <Globe className="text-muted-foreground h-4 w-4" />
+                    <span className="text-foreground">
+                      {product.deletedAt
+                        ? "削除済み"
+                        : product.isActive
+                          ? "HP掲載"
+                          : "非公開"}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3 text-sm">
                     <Box className="text-muted-foreground h-4 w-4" />
                     <span className="text-foreground">
                       {product.isInStock ? "在庫あり" : "在庫なし"}
+                      {product.isInStock &&
+                        product.stock > 0 &&
+                        `（${product.stock}）`}
                     </span>
                   </div>
                   <div className="flex items-center gap-3 text-sm">
@@ -86,6 +128,12 @@ export default async function Page(props: PageProps<"/admin/user/[id]">) {
                         : "カテゴリー: 指定なし"}
                     </span>
                   </div>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <h3 className="text-foreground font-semibold">各種設定</h3>
+                <div className="grid grid-cols-3 gap-2">
+                  <EditStock key={now} product={product} />
                 </div>
               </div>
             </Card>
@@ -114,6 +162,25 @@ export default async function Page(props: PageProps<"/admin/user/[id]">) {
             </Card>
           </div>
         </div>
+
+        <Card className="border-destructive/50 mt-20 overflow-hidden pb-0">
+          <CardHeader>
+            <CardTitle>商品を削除</CardTitle>
+            <CardDescription className="border-b pb-3">
+              この商品を今後販売する予定がない場合にこの操作を行ってください。
+              <br />
+              ホームページから一時的に非表示にするだけの場合はこの操作は適していません。
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p>
+              削除する商品：<span className="font-bold">{product.name}</span>
+            </p>
+          </CardContent>
+          <CardFooter className="bg-destructive/10 justify-end py-3">
+            <Button variant="destructive">商品を削除</Button>
+          </CardFooter>
+        </Card>
       </div>
     </>
   )
