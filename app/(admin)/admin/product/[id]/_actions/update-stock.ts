@@ -34,12 +34,10 @@ export async function updateStockAction(
   _prevState: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
-  console.log("------------------------")
   const validatedFields = schema.safeParse({
     stock: formData.get("stock") ?? undefined,
   })
   if (!validatedFields.success) {
-    console.log(validatedFields.error)
     return {
       type: "ERROR",
       errors: z.flattenError(validatedFields.error).fieldErrors,
@@ -49,7 +47,6 @@ export async function updateStockAction(
       },
     }
   }
-  console.log(validatedFields.data)
   try {
     await prisma.product.update({
       where: { id },
@@ -69,8 +66,6 @@ export async function updateStockAction(
   revalidatePath(`/admin/product/${id}`)
   return {
     type: "SUCCESS",
-    message:
-      "作成時にデータベースでエラーが発生しました。ページを再読み込みをしてから再度試すか、管理者まで問い合わせてください。",
     prevData: { stock: "" },
   }
 }
