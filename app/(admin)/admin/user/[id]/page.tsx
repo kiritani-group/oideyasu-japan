@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { auth } from "@/lib/auth"
@@ -123,17 +124,24 @@ export default async function Page(props: PageProps<"/admin/user/[id]">) {
           <div className="@2xl:col-span-2">
             <Card className="space-y-2 p-6">
               <div className="flex items-start justify-between">
-                <div>
-                  <h2 className="text-foreground text-2xl font-bold">
-                    {user.name ? user.name + " 様" : "未設定"}
-                  </h2>
-                  <p className="text-muted-foreground mt-1 text-sm">
-                    顧客ID: {user.id}
-                  </p>
-                </div>
-                <div className={`rounded-full px-3 py-1 text-sm font-medium`}>
-                  {user.role}
-                </div>
+                <h2 className="text-foreground text-2xl font-bold text-wrap">
+                  {user.name ? user.name + " 様" : "未設定"}
+                </h2>
+                <Badge
+                  variant={
+                    user.role === "USER"
+                      ? "outline"
+                      : user.role === "ADMIN"
+                        ? "default"
+                        : "secondary"
+                  }
+                >
+                  {user.role === "USER"
+                    ? "会員"
+                    : user.role === "ADMIN"
+                      ? "管理者"
+                      : "ゲスト"}
+                </Badge>
               </div>
 
               {/* Contact Information */}
