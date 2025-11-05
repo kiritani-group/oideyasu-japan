@@ -20,11 +20,10 @@ export default function Breadcrumbs() {
     .filter((seg) => seg !== "admin")
   const breadcrumbs = segments.map((segment, index) => {
     const href = "/admin/" + segments.slice(0, index + 1).join("/")
-    const label = getReadableLabel(segment)
+    const prev = segments[index - 1]
+    const label = getReadableLabel(segment, prev)
     return { href, label }
   })
-
-  console.log({ breadcrumbs })
   return (
     <Breadcrumb>
       <BreadcrumbList>
@@ -55,20 +54,43 @@ export default function Breadcrumbs() {
   )
 }
 
-function getReadableLabel(segment: string): string {
-  if (labelMap[segment]) {
-    return labelMap[segment]
+function getReadableLabel(segment: string, prev?: string): string {
+  // 静的マッピング
+  if (labelMap[segment]) return labelMap[segment]
+
+  // 前のセグメントに応じて動的に判断
+  if (prev === "user") {
+    if (isId(segment)) return "顧客詳細"
   }
-  const cuidRegex = /^c[a-z0-9]{24,}$/ // "c" + 24文字以上（cuid, cuid2どちらもOK）
-  const nanoidRegex = /^[A-Za-z0-9_-]{21,36}$/ // 標準長〜長めのNanoID
-  if (cuidRegex.test(segment) || nanoidRegex.test(segment)) {
-    return "詳細"
+
+  if (prev === "order") {
+    if (isId(segment)) return "注文詳細"
   }
+
+  if (prev === "product") {
+    if (isId(segment)) return "商品詳細"
+  }
+  
+  // 長いIDなどは「詳細」とする
+  if (segment.length > 20) return "詳細"
+
+  // デフォルトはそのまま
   return segment
 }
 
+/**
+ * 静的ラベルマップ（第一階層）
+ */
 const labelMap: Record<string, string> = {
-  user: "ユーザー管理",
+  user: "顧客管理",
   order: "注文管理",
   product: "商品管理",
+  setting: "設定",
+}
+
+/**
+ * IDかどうかを判定（数字またはUUIDなど）
+ */
+function isId(value: string): boolean {
+  return /^[0-9a-zA-Z_-]+$/.test(value) && !labelMap[value]
 }
