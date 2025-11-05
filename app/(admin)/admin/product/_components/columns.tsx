@@ -1,5 +1,6 @@
 "use client"
 
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { ColumnDef } from "@tanstack/react-table"
 import { LinkIcon } from "lucide-react"
@@ -8,6 +9,7 @@ import Link from "next/link"
 export type Product = {
   id: string
   name: string
+  isActive: boolean
   price: number
   stock: number
 }
@@ -36,6 +38,19 @@ export const columns: ColumnDef<Product>[] = [
   {
     accessorKey: "name",
     header: "名前",
+  },
+  {
+    accessorKey: "isActive",
+    header: "HP",
+    cell: ({ row }) => {
+      const product = row.original
+      const isActive = product.isActive
+      return (
+        <Badge variant={isActive ? "outline" : "destructive"}>
+          {isActive ? "公開中" : "非表示"}
+        </Badge>
+      )
+    },
   },
   {
     accessorKey: "price",
