@@ -12,7 +12,9 @@ export default async function Page() {
   if (session?.user.role !== "ADMIN") {
     redirect("/")
   }
-  const products: Product[] = await prisma.product.findMany()
+  const products: Product[] = await prisma.product.findMany({
+    where: { deletedAt: null },
+  })
   return (
     <div className="p-2">
       <DataTable columns={columns} data={products} />
