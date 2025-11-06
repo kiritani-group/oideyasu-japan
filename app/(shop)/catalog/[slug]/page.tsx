@@ -10,21 +10,23 @@ export const metadata: Metadata = {
   title: "通販くらぶ",
 }
 
-// export async function generateStaticParams() {
-//   let products: {
-//     slug: string
-//   }[] = []
-//   products = await prisma.product.findMany({
-//     where: { isActive: true, deletedAt: null },
-//     select: { slug: true },
-//   })
-//   if (products.length === 0) {
-//     return [{ slug: "sample-product" }]
-//   }
-//   return products.map((product) => ({
-//     slug: product.slug,
-//   }))
-// }
+export async function generateStaticParams() {
+  "use cache"
+  cacheTag("products", "max")
+  let products: {
+    slug: string
+  }[] = []
+  products = await prisma.product.findMany({
+    where: { isActive: true, deletedAt: null },
+    select: { slug: true },
+  })
+  if (products.length === 0) {
+    return [{ slug: "sample-product" }]
+  }
+  return products.map((product) => ({
+    slug: product.slug,
+  }))
+}
 
 export default async function Page(props: PageProps<"/catalog/[slug]">) {
   const { slug } = await props.params
