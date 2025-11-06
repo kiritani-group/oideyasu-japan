@@ -64,7 +64,8 @@ export async function createProductAction(
     return {
       type: "ERROR",
       errors: z.flattenError(validatedFields.error).fieldErrors,
-      message: "少なくとも1つの項目が適切ではありません。",
+      message:
+        "少なくとも1つの項目が適切ではありません。各項目を確認して、再度送信してください。",
       prevData: {
         name: formData.get("name")?.toString() ?? "",
         price: formData.get("price")?.toString() ?? "",
