@@ -10,10 +10,16 @@ export const metadata: Metadata = {
 }
 
 export async function generateStaticParams() {
-  const products = await prisma.product.findMany({
+  let products: {
+    slug: string
+  }[] = []
+  products = await prisma.product.findMany({
     where: { isActive: true, deletedAt: null },
     select: { slug: true },
   })
+  if (products.length === 0) {
+    return [{ slug: "sample-product" }]
+  }
   return products.map((product) => ({
     slug: product.slug,
   }))
