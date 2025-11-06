@@ -13,6 +13,7 @@ import prisma from "@/lib/prisma"
 import {
   ArrowLeft,
   Box,
+  FileText,
   FolderOpen,
   Globe,
   JapaneseYen,
@@ -69,9 +70,12 @@ export default async function Page(props: PageProps<"/admin/product/[id]">) {
           <div className="@2xl:col-span-2">
             <Card className="space-y-2 p-6">
               <div className="flex items-start justify-between gap-1.5">
-                <h2 className="text-foreground text-2xl font-bold text-wrap">
-                  {product.name || "未設定"}
-                </h2>
+                <div>
+                  <h2 className="text-foreground text-2xl font-bold text-wrap">
+                    {product.name || "未設定"}
+                  </h2>
+                  <p className="text-muted-foreground">{product.slug}</p>
+                </div>
                 <Badge
                   variant={
                     product.deletedAt
@@ -137,6 +141,12 @@ export default async function Page(props: PageProps<"/admin/product/[id]">) {
               <div className="space-y-3">
                 <h3 className="text-foreground font-semibold">各種設定</h3>
                 <div className="grid grid-cols-[repeat(auto-fit,minmax(10rem,1fr))] gap-2">
+                  <EditDialog
+                    mode="name"
+                    product={product}
+                    label="名称設定"
+                    icon={<FileText />}
+                  />
                   <EditDialog
                     mode="isActive"
                     product={product}

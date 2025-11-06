@@ -20,7 +20,7 @@ import { createProductAction } from "./_action"
 export default function ProductCreateForm() {
   const [state, formAction, pending] = useActionState(createProductAction, {
     type: "IDLE",
-    prevData: { name: "", price: "", description: "" },
+    prevData: { name: "", slug: "", price: "", description: "" },
   })
   const [price, setPrice] = useState(state.prevData.price)
   return (
@@ -68,6 +68,25 @@ export default function ProductCreateForm() {
             ) : (
               <p className="text-muted-foreground pl-1 text-xs">
                 文字間にスペースを置く場合、半角のほうがHPでの表示がきれい。
+              </p>
+            )}
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="slug">URL用スラッグ</Label>
+            <Input
+              id="slug"
+              name="slug"
+              aria-invalid={!!state.errors?.slug}
+              placeholder="karei-no-surume"
+              defaultValue={state.prevData.slug}
+            />
+            {state.errors?.slug ? (
+              <p className="text-destructive pl-1 text-xs">
+                {state.errors.slug}
+              </p>
+            ) : (
+              <p className="text-muted-foreground pl-1 text-xs">
+                商品個別ページのURLに使われます。半角英小文字・数字・ハイフンのみ使用可能です。
               </p>
             )}
           </div>
