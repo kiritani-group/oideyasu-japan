@@ -110,7 +110,6 @@ export async function updateNameAction(
     revalidateTag("products", "max")
     revalidateTag(updated.id, "max")
     revalidateTag(`product-${updated.slug}`, "max")
-    revalidatePath(`/catalog/${updated.slug}`)
   } catch {
     return {
       type: "ERROR",

@@ -55,7 +55,6 @@ export async function updateIsActiveAction(
     revalidateTag("products", "max")
     revalidateTag(updated.id, "max")
     revalidateTag(`product-${updated.slug}`, "max")
-    revalidatePath(`/catalog/${updated.slug}`)
   } catch {
     return {
       type: "ERROR",
