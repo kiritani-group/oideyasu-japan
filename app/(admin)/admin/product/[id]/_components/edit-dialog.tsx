@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import { useState } from "react"
 import EditCategoryForm from "./edit-form-category"
 import EditIsActiveForm from "./edit-form-is-active"
+import EditNameForm from "./edit-form-name"
 import EditStockForm from "./edit-form-stock"
 
 export default function EditDialog({
@@ -14,10 +15,11 @@ export default function EditDialog({
   icon,
   categories,
 }: {
-  mode: "stock" | "isActive" | "category"
+  mode: "name" | "stock" | "isActive" | "category"
   product: {
     id: string
     name: string
+    slug: string
     isActive: boolean
     stock: number
     categoryId: string | null
@@ -36,7 +38,9 @@ export default function EditDialog({
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        {mode === "isActive" ? (
+        {mode === "name" ? (
+          <EditNameForm product={product} setOpen={setOpen} />
+        ) : mode === "isActive" ? (
           <EditIsActiveForm product={product} setOpen={setOpen} />
         ) : mode === "stock" ? (
           <EditStockForm product={product} setOpen={setOpen} />
