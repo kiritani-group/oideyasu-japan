@@ -1,7 +1,7 @@
 "use server"
 
 import prisma from "@/lib/prisma"
-import { revalidatePath } from "next/cache"
+import { revalidatePath, revalidateTag } from "next/cache"
 import { z } from "zod"
 
 type ActionState = {
@@ -61,10 +61,18 @@ export async function updateNameAction(
   // 同一スラッグの存在チェック
   try {
     const sameSlug = await prisma.product.findFirst({
-      where: { id: { not: id }, slug: validatedFields.data.slug, deletedAt: null },
+      where: {
+        id: { not: id },
+        slug: validatedFields.data.slug,
+        deletedAt: null,
+      },
     })
     const sameName = await prisma.product.findFirst({
-      where: { id: { not: id }, name: validatedFields.data.name, deletedAt: null },
+      where: {
+        id: { not: id },
+        name: validatedFields.data.name,
+        deletedAt: null,
+      },
     })
     if (sameSlug || sameName) {
       return {
@@ -95,10 +103,13 @@ export async function updateNameAction(
 
   // 更新処理
   try {
-    await prisma.product.update({
+    const updated = await prisma.product.update({
       where: { id },
       data: validatedFields.data,
     })
+    revalidateTag("products", "max")
+    revalidateTag(updated.id, "max")
+    revalidateTag(`product-${updated.slug}`, "max")
   } catch {
     return {
       type: "ERROR",

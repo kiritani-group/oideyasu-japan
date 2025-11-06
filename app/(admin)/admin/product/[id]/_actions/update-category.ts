@@ -1,7 +1,7 @@
 "use server"
 
 import prisma from "@/lib/prisma"
-import { revalidatePath } from "next/cache"
+import { revalidatePath, revalidateTag } from "next/cache"
 import { z } from "zod"
 
 type ActionState = {
@@ -45,12 +45,15 @@ export async function updateCategoryAction(
     }
   }
   try {
-    await prisma.product.update({
+    const updated = await prisma.product.update({
       where: { id },
       data: {
         categoryId: validatedFields.data.categoryId,
       },
     })
+    revalidateTag("products", "max")
+    revalidateTag(updated.id, "max")
+    revalidateTag(`product-${updated.slug}`, "max")
   } catch {
     return {
       type: "ERROR",
