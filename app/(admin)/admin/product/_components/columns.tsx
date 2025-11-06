@@ -12,6 +12,7 @@ export type Product = {
   isActive: boolean
   price: number
   stock: number
+  deletedAt: Date | null
 }
 
 export const columns: ColumnDef<Product>[] = [
@@ -41,13 +42,31 @@ export const columns: ColumnDef<Product>[] = [
   },
   {
     accessorKey: "isActive",
-    header: "HP",
+    header: "掲載状況",
     cell: ({ row }) => {
       const product = row.original
-      const isActive = product.isActive
       return (
-        <Badge variant={isActive ? "outline" : "destructive"}>
-          {isActive ? "公開中" : "非表示"}
+        <Badge
+          variant={
+            product.deletedAt
+              ? "secondary"
+              : product.isActive
+                ? "secondary"
+                : "destructive"
+          }
+          className={
+            product.deletedAt
+              ? ""
+              : product.isActive
+                ? "bg-green-500 text-white"
+                : ""
+          }
+        >
+          {product.deletedAt
+            ? "削除済み"
+            : product.isActive
+              ? "掲載中"
+              : "非公開"}
         </Badge>
       )
     },
@@ -76,7 +95,7 @@ export const columns: ColumnDef<Product>[] = [
       ) : stock < 100 ? (
         <span className="flex w-12 justify-end">{stock}</span>
       ) : (
-        <span className="flex w-12 justify-end text-green-700">{">"} 100</span>
+        <span className="flex w-12 justify-end text-green-700">≧100</span>
       )
     },
   },
