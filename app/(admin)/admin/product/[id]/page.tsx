@@ -22,7 +22,7 @@ import {
 import { headers } from "next/headers"
 import Link from "next/link"
 import { notFound, redirect } from "next/navigation"
-import EditStock from "./_components/edit-stock"
+import EditDialog from "./_components/edit-dialog"
 
 export default async function Page(props: PageProps<"/admin/product/[id]">) {
   const session = await auth.api.getSession({
@@ -32,19 +32,23 @@ export default async function Page(props: PageProps<"/admin/product/[id]">) {
     redirect("/")
   }
   const { id } = await props.params
-  const product = await prisma.product.findUnique({
-    where: { id },
-    include: { category: { select: { name: true } } },
-  })
-  const now = new Date().getTime()
+  const [product, categories] = await Promise.all([
+    prisma.product.findUnique({
+      where: { id },
+      include: { category: { select: { name: true } } },
+    }),
+    prisma.category.findMany({
+      select: { id: true, name: true },
+    }),
+  ])
   if (!product) notFound()
   return (
     <>
       <div className="bg-card border-b">
-        <div className="flex items-center gap-4 px-6 py-4">
+        <div className="flex items-center gap-4 p-3">
           <Link
             href="/admin/product"
-            className="text-muted-foreground hover:text-foreground flex items-center gap-2 transition-colors"
+            className="text-muted-foreground hover:text-foreground flex items-center gap-1.5 transition-colors"
           >
             <ArrowLeft className="h-5 w-5" />
             <span className="text-sm">戻る</span>
@@ -71,23 +75,23 @@ export default async function Page(props: PageProps<"/admin/product/[id]">) {
                 <Badge
                   variant={
                     product.deletedAt
-                      ? "destructive"
+                      ? "secondary"
                       : product.isActive
                         ? "secondary"
-                        : "secondary"
+                        : "destructive"
                   }
                   className={
                     product.deletedAt
                       ? ""
                       : product.isActive
                         ? "bg-green-500 text-white"
-                        : "secondary"
+                        : ""
                   }
                 >
                   {product.deletedAt
                     ? "削除済み"
                     : product.isActive
-                      ? "HP掲載"
+                      ? "HP掲載中"
                       : "非公開"}
                 </Badge>
               </div>
@@ -107,7 +111,7 @@ export default async function Page(props: PageProps<"/admin/product/[id]">) {
                       {product.deletedAt
                         ? "削除済み"
                         : product.isActive
-                          ? "HP掲載"
+                          ? "HP掲載中"
                           : "非公開"}
                     </span>
                   </div>
@@ -132,8 +136,26 @@ export default async function Page(props: PageProps<"/admin/product/[id]">) {
               </div>
               <div className="space-y-3">
                 <h3 className="text-foreground font-semibold">各種設定</h3>
-                <div className="grid grid-cols-3 gap-2">
-                  <EditStock key={now} product={product} />
+                <div className="grid grid-cols-[repeat(auto-fit,minmax(10rem,1fr))] gap-2">
+                  <EditDialog
+                    mode="isActive"
+                    product={product}
+                    label="公開設定"
+                    icon={<Globe />}
+                  />
+                  <EditDialog
+                    mode="stock"
+                    product={product}
+                    label="在庫設定"
+                    icon={<Box />}
+                  />
+                  <EditDialog
+                    mode="category"
+                    product={product}
+                    label="カテゴリー設定"
+                    icon={<FolderOpen />}
+                    categories={categories}
+                  />
                 </div>
               </div>
             </Card>
