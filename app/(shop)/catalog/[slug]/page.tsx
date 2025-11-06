@@ -1,6 +1,7 @@
 import PageTitle from "@/components/page/page-title"
 import prisma from "@/lib/prisma"
 import type { Metadata } from "next"
+import { cacheTag } from "next/cache"
 import { notFound } from "next/navigation"
 import About from "./_components/about"
 import ProductImages from "./_components/images"
@@ -42,7 +43,7 @@ export default async function Page(props: PageProps<"/catalog/[slug]">) {
 
 async function fetchProduct(slug: string) {
   "use cache"
-  return await prisma.product.findFirst({
+  const product = await prisma.product.findFirst({
     where: { slug, isActive: true, deletedAt: null },
     select: {
       id: true,
@@ -53,4 +54,8 @@ async function fetchProduct(slug: string) {
       images: { select: { url: true }, orderBy: { order: "asc" } },
     },
   })
+  if (product) {
+    cacheTag(`product-${slug}`, product.id)
+  }
+  return product
 }

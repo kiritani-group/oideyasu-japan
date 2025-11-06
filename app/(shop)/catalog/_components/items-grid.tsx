@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge"
 import prisma from "@/lib/prisma"
 import { cn } from "@/lib/utils"
+import { cacheTag } from "next/cache"
 import Image from "next/image"
 import Link from "next/link"
 
@@ -10,6 +11,7 @@ export default async function ItemsGrid({
   categorySlugs?: string[]
 }) {
   "use cache"
+  cacheTag("products")
   const products = await prisma.product.findMany({
     where: {
       isActive: true,
