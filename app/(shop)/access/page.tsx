@@ -1,6 +1,6 @@
 import PageTitle from "@/components/page/page-title"
 import { Card, CardContent } from "@/components/ui/card"
-import { Car, Clock, MapPin, Phone, PhoneOutgoing ,House} from "lucide-react"
+import { Car, Clock, House, MapPin, Phone, PhoneOutgoing } from "lucide-react"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
@@ -14,7 +14,7 @@ export default function Page() {
         title="アクセス・お問い合わせ"
         subTitle="お気軽にお電話ください"
       />
-      <div className="mx-2 my-10">
+      <div className="mx-2 my-10 opacity-100 transition-all duration-1000 @xl:mx-4 starting:translate-y-3 starting:opacity-0">
         <Card className="grid gap-0 py-0 @3xl:grid-cols-2">
           <CardContent className="p-1">
             <iframe
