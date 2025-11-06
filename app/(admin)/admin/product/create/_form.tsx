@@ -1,5 +1,6 @@
 "use client"
 
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -12,6 +13,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import { AlertCircleIcon } from "lucide-react"
 import { useActionState, useState } from "react"
 import { createProductAction } from "./_action"
 
@@ -41,8 +43,14 @@ export default function ProductCreateForm() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          {state.message && (
-            <p className="text-destructive text-sm">{state.message}</p>
+          {state.type === "ERROR" && state.message && (
+            <Alert variant="destructive">
+              <AlertCircleIcon />
+              <AlertTitle>正常に登録が完了できませんでした。</AlertTitle>
+              <AlertDescription>
+                <p>{state.message}</p>
+              </AlertDescription>
+            </Alert>
           )}
           <div className="space-y-2">
             <Label htmlFor="name">商品名</Label>
