@@ -11,8 +11,6 @@ export const metadata: Metadata = {
 }
 
 export async function generateStaticParams() {
-  "use cache"
-  cacheTag("products", "max")
   let products: {
     slug: string
   }[] = []
