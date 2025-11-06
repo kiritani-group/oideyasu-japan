@@ -15,10 +15,10 @@ export default async function Page(props: PageProps<"/admin/product/create">) {
   return (
     <>
       <div className="bg-card border-b">
-        <div className="flex items-center gap-4 px-6 py-4">
+        <div className="flex items-center gap-4 p-3">
           <Link
             href="/admin/product"
-            className="text-muted-foreground hover:text-foreground flex items-center gap-2 transition-colors"
+            className="text-muted-foreground hover:text-foreground flex items-center gap-1.5 transition-colors"
           >
             <ArrowLeft className="h-5 w-5" />
             <span className="text-sm">戻る</span>
