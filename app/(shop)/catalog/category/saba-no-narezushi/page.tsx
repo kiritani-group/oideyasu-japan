@@ -1,5 +1,4 @@
 import PageTitle from "@/components/page/page-title"
-import { products } from "@/data/products"
 import Narezushi from "@/public/saba-no-narezushi.jpg"
 import type { Metadata } from "next"
 import Image from "next/image"
@@ -10,11 +9,10 @@ export const metadata: Metadata = {
 }
 
 export default function Page() {
-  const sabaItems = products.filter((item) => item.category === "SABA")
   return (
     <>
       <PageTitle title="お取り寄せ - 通販くらぶ" subTitle="鯖なれずし" />
-      <div className="relative mx-2 my-10 translate-y-0 overflow-hidden rounded-lg p-6 opacity-100 shadow-lg transition-all duration-1000 sm:p-8 lg:p-10 starting:translate-y-3 starting:opacity-0">
+      <div className="relative mx-2 my-10 translate-y-0 overflow-hidden rounded-lg p-6 opacity-100 shadow-lg transition-all duration-1000 sm:p-8 lg:p-10 @xl:mx-4 starting:translate-y-3 starting:opacity-0">
         <Image
           src={Narezushi}
           alt="鯖のなれずし"
@@ -22,7 +20,7 @@ export default function Page() {
           fill
           className="z-0 object-cover"
         />
-        <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-l from-black/80 via-black/80 to-black/80 @3xl:via-black/75 @3xl:to-black/0" />{" "}
+        <div className="pointer-events-none absolute inset-0 z-0 bg-linear-to-l from-black/80 via-black/80 to-black/80 @3xl:via-black/75 @3xl:to-black/0" />{" "}
         <div className="relative z-10 text-white @3xl:ml-auto @3xl:w-1/2">
           <h2 className="mb-4 text-xl tracking-wide @3xl:text-2xl">
             鯖なれずし
@@ -64,8 +62,8 @@ export default function Page() {
           </div>
         </div>
       </div>
-      <section className="mx-2 my-10">
-        <ItemsGrid items={sabaItems} />
+      <section className="mx-2 my-10 @xl:mx-4">
+        <ItemsGrid categorySlugs={["saba-no-narezushi"]} />
       </section>
     </>
   )
