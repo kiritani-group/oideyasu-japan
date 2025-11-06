@@ -1,5 +1,4 @@
 import PageTitle from "@/components/page/page-title"
-import { products } from "@/data/products"
 import prisma from "@/lib/prisma"
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
@@ -11,8 +10,12 @@ export const metadata: Metadata = {
 }
 
 export async function generateStaticParams() {
-  return products.map((p) => ({
-    slug: p.slug,
+  const products = await prisma.product.findMany({
+    where: { isActive: true, deletedAt: null },
+    select: { slug: true },
+  })
+  return products.map((product) => ({
+    slug: product.slug,
   }))
 }
 
