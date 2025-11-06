@@ -2,12 +2,15 @@
 
 import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
-import type { Product } from "@/data/products"
 import { Minus, Plus, ShoppingCart } from "lucide-react"
 import { useActionState, useState } from "react"
 import { addCartAction } from "./_action"
 
-export default function AddCart({ product }: { product: Product }) {
+export default function AddCart({
+  product,
+}: {
+  product: { id: string; price: number }
+}) {
   const [quantity, setQuantity] = useState(1)
 
   const [state, action, waiting] = useActionState(

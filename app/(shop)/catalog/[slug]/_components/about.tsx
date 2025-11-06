@@ -1,21 +1,30 @@
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
-import type { Product } from "@/data/products"
 import AddCart from "./add-cart"
 
-export default function ProductImages({ product }: { product: Product }) {
+export default function ProductImages({
+  product,
+}: {
+  product: {
+    id: string
+    name: string
+    description: string | null
+    price: number
+    isInStock: boolean
+  }
+}) {
   return (
     <div className="space-y-6">
       <div>
-        <div className="mb-2 flex items-center gap-2">
-          {product.inStock ? (
+        <div className="mt-0.5 mb-2 flex items-center gap-2">
+          {product.isInStock ? (
             <Badge>在庫あり</Badge>
           ) : (
-            <Badge variant="outline">在庫なし</Badge>
+            <Badge variant="destructive">在庫なし</Badge>
           )}
         </div>
         <h1 className="text-foreground text-3xl leading-tight font-bold">
-          {product.title}
+          {product.name}
         </h1>
       </div>
 
@@ -26,11 +35,11 @@ export default function ProductImages({ product }: { product: Product }) {
       </div>
 
       {/* Description */}
-      <p className="text-muted-foreground leading-relaxed text-pretty">
+      <p className="text-muted-foreground leading-relaxed text-pretty whitespace-pre-line">
         {product.description}
       </p>
 
-      {product.inStock && <AddCart product={product} />}
+      {product.isInStock && <AddCart product={product} />}
 
       {/* Additional Info */}
       <Card className="border-border bg-muted/50 p-4">
@@ -38,7 +47,7 @@ export default function ProductImages({ product }: { product: Product }) {
           <div className="flex justify-between">
             <span className="text-muted-foreground">お届け予定</span>
             <span className="text-foreground font-medium">
-              {product.inStock ? "1-3営業日" : "在庫切れ"}
+              {product.isInStock ? "1-3営業日" : "在庫切れ"}
             </span>
           </div>
           <div className="flex justify-between">
