@@ -8,7 +8,7 @@ model Product {
   price           Int
   stock           Int            @default(0)
   isInStock       Boolean        @default(true)
-  isActive        Boolean        @default(false)     
+  isActive        Boolean        @default(false)
   deliveryMinDays Int?
   deliveryMaxDays Int?
   categoryId      String?
@@ -17,6 +17,8 @@ model Product {
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
   deletedAt       DateTime?
+
+  orders OrderItem[]
 }
 
 model ProductImage {
