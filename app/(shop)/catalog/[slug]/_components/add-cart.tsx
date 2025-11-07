@@ -1,8 +1,15 @@
 "use client"
 
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
-import { Minus, Plus, ShoppingCart } from "lucide-react"
+import {
+  CheckCircle,
+  CheckCircle2Icon,
+  Minus,
+  Plus,
+  ShoppingCart,
+} from "lucide-react"
 import { useActionState, useState } from "react"
 import { addCartAction } from "./_action"
 
@@ -49,16 +56,44 @@ export default function AddCart({
           </span>
         </div>
       </div>
-      <form action={action}>
-        <Button size="lg" className="w-full cursor-pointer" disabled={waiting}>
-          {waiting ? (
-            <Spinner className="mr-2 size-5" />
-          ) : (
-            <ShoppingCart className="mr-2 size-5" />
-          )}
-          カートに追加
-        </Button>
-      </form>
+      {state.status !== "SUCCESS" ? (
+        <form action={action}>
+          <Button
+            size="lg"
+            className="w-full cursor-pointer"
+            disabled={waiting}
+          >
+            {waiting ? (
+              <Spinner className="mr-2 size-5" />
+            ) : (
+              <ShoppingCart className="mr-2 size-5" />
+            )}
+            カートに追加
+          </Button>
+        </form>
+      ) : (
+        <div>
+          <Button
+            size="lg"
+            className="w-full cursor-default bg-emerald-500 hover:bg-emerald-500"
+            disabled={waiting}
+          >
+            <CheckCircle className="mr-2 size-5" />
+            カートに追加済み
+          </Button>
+          <div className="max-h-60 overflow-hidden pt-2 opacity-100 transition-all duration-1000 starting:max-h-0 starting:p-0 starting:opacity-0">
+            <Alert>
+              <CheckCircle2Icon />
+              <AlertTitle>カートに商品を追加しました！</AlertTitle>
+              <AlertDescription>
+                画面右上のショッピングカートをご確認の上、購入手続きを進めてください。
+                <br />
+                そのまま他の商品を選ぶことも可能です。引き続きお買い物をお楽しみください！
+              </AlertDescription>
+            </Alert>
+          </div>
+        </div>
+      )}
     </>
   )
 }
