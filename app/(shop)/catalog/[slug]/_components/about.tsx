@@ -1,8 +1,6 @@
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
-import { Suspense } from "react"
-import PrivateCart from "./private-cart"
-import PrivateCartSkeleton from "./private-cart-skeleton"
+import AddCart from "./add-cart"
 
 export default function ProductImages({
   product,
@@ -41,11 +39,7 @@ export default function ProductImages({
         {product.description}
       </p>
 
-      {product.isInStock && (
-        <Suspense fallback={<PrivateCartSkeleton product={product} />}>
-          <PrivateCart product={product} />
-        </Suspense>
-      )}
+      {product.isInStock && <AddCart product={product} />}
 
       {/* Additional Info */}
       <Card className="border-border bg-muted/50 p-4">

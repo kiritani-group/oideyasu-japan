@@ -8,24 +8,16 @@ import { addCartAction } from "./_action"
 
 export default function AddCart({
   product,
-  user,
 }: {
-  product: { id: string; price: number }
-  user:
-    | {
-        id: string
-        type: "USER" | "GUEST"
-      }
-    | undefined
+  product: { id: string; name: string; price: number }
 }) {
   const [quantity, setQuantity] = useState(1)
   const [state, action, waiting] = useActionState(
-    addCartAction.bind(null, product.id, quantity),
+    addCartAction.bind(null, product, quantity),
     { status: "IDLE" },
   )
   const incrementQuantity = () => setQuantity((prev) => prev + 1)
   const decrementQuantity = () => setQuantity((prev) => Math.max(1, prev - 1))
-
   return (
     <>
       <div>

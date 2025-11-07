@@ -1,6 +1,6 @@
 import "@/app/globals.css"
 import { AppSidebar } from "@/components/layout/app-sidevar"
-import ShoppingCartDrawerDialog from "@/components/layout/shopping/header-drawer-dialog"
+import { CartServer } from "@/components/layout/shopping/cart-server"
 import {
   SidebarInset,
   SidebarProvider,
@@ -11,6 +11,7 @@ import type { Metadata } from "next"
 import { Noto_Sans_JP } from "next/font/google"
 import Image from "next/image"
 import Link from "next/link"
+import { Suspense } from "react"
 
 const notoSansJp = Noto_Sans_JP({
   subsets: ["latin"],
@@ -56,7 +57,9 @@ export default function RootLayout({
                 </h1>
               </Link>
               <div className="flex items-center gap-2">
-                <ShoppingCartDrawerDialog />
+                <Suspense>
+                  <CartServer />
+                </Suspense>
                 <SidebarTrigger className="size-8" />
               </div>
             </header>
