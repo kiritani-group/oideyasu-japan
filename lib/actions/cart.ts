@@ -1,6 +1,12 @@
 "use server"
 
-import { addToCart, Cart, getCartKey } from "@/lib/cart"
+import {
+  addToCart,
+  Cart,
+  changeQuantity,
+  getCartKey,
+  removeFromCart,
+} from "@/lib/cart"
 import { randomUUID } from "crypto"
 import { updateTag } from "next/cache"
 import { cookies } from "next/headers"
@@ -20,9 +26,31 @@ export async function addCartAction(
       maxAge: 60 * 60 * 24 * 30, // 30日
     })
   }
-  await new Promise((resolve) => setTimeout(resolve, 500))
   await addToCart(product, quantity)
   updateTag("cart")
   await new Promise((resolve) => setTimeout(resolve, 500))
+  return { status: "SUCCESS" }
+}
+
+export async function removeProductAction(productId: string) {
+  const cartKey = await getCartKey()
+  if (!cartKey) {
+    return { status: "IDLE" }
+  }
+  await removeFromCart(productId)
+  updateTag("cart")
+  return { status: "SUCCESS" }
+}
+
+export async function changeQuantityAction(
+  productId: string,
+  quantity: number,
+) {
+  const cartKey = await getCartKey()
+  if (!cartKey) {
+    return { status: "IDLE" }
+  }
+  await changeQuantity(productId, quantity)
+  updateTag("cart")
   return { status: "SUCCESS" }
 }
