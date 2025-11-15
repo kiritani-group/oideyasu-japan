@@ -11,6 +11,11 @@ export type Cart = {
   updatedAt: Date | string
 }
 
+async function refreshCartTTL(key: string) {
+  // 30日 = 60 * 60 * 24 * 30 秒
+  await redis.expire(key, 60 * 60 * 24 * 30)
+}
+
 export async function getCartKey(): Promise<string | null> {
   const session = await auth.api.getSession({ headers: await headers() })
   const userId = session?.user?.id
@@ -44,18 +49,43 @@ export async function addToCart(
   if (!key) return
 
   const cart = await getCart()
-  const existingItem = cart.items.find((item) => item.productId === product.id)
+  if (!cart) return
 
-  if (existingItem) {
-    existingItem.quantity += quantity
-    existingItem.product = product
-  } else {
-    cart.items.push({ productId: product.id, product, quantity })
+  const exists = cart.items.some((item) => item.productId === product.id)
+
+  let newItems = cart.items.map((item) =>
+    item.productId === product.id
+      ? {
+          ...item,
+          product, // product を最新化
+          quantity,
+        }
+      : item,
+  )
+
+  // 新規で追加すべきなら push
+  if (!exists && quantity > 0) {
+    newItems = [
+      ...newItems,
+      {
+        productId: product.id,
+        product,
+        quantity,
+      },
+    ]
   }
-  cart.updatedAt = new Date()
 
-  await redis.hset(key, cart)
-  await redis.expire(key, 60 * 60 * 24 * 30)
+  // 数量が 0 以下の場合は削除
+  newItems = newItems.filter((item) => item.quantity > 0)
+
+  const newCart = {
+    ...cart,
+    items: newItems,
+    updatedAt: new Date(),
+  }
+
+  await redis.hset(key, newCart)
+  await refreshCartTTL(key)
 }
 
 export async function removeFromCart(productId: string): Promise<void> {
@@ -65,13 +95,14 @@ export async function removeFromCart(productId: string): Promise<void> {
   const cart = await getCart()
   if (!cart) return
 
-  // 指定の productId を持つアイテムを削除
-  cart.items = cart.items.filter((item) => item.productId !== productId)
+  const newCart = {
+    ...cart,
+    items: cart.items.filter((item) => item.productId !== productId),
+    updatedAt: new Date(),
+  }
 
-  cart.updatedAt = new Date()
-
-  await redis.hset(key, cart)
-  await redis.expire(key, 60 * 60 * 24 * 30) // 30日
+  await redis.hset(key, newCart)
+  await refreshCartTTL(key)
 }
 
 export async function changeQuantity(
@@ -85,12 +116,18 @@ export async function changeQuantity(
   const cart = await getCart()
   if (!cart) return
 
-  const item = cart.items.find((i) => i.productId === productId)
-  if (item) {
-    item.quantity = quantity
-    cart.updatedAt = new Date()
+  const newItems = cart.items
+    .map((item) =>
+      item.productId === productId ? { ...item, quantity } : item,
+    )
+    .filter((item) => item.quantity > 0)
+
+  const newCart = {
+    ...cart,
+    items: newItems,
+    updatedAt: new Date(),
   }
 
-  await redis.hset(key, cart)
-  await redis.expire(key, 60 * 60 * 24 * 30) // 30日
+  await redis.hset(key, newCart)
+  await refreshCartTTL(key)
 }
