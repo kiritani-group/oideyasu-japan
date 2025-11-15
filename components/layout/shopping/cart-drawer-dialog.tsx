@@ -22,9 +22,11 @@ import {
 import { useIsMobile } from "@/hooks/use-mobile"
 import { Cart } from "@/lib/cart"
 import { cn } from "@/lib/utils"
-import { Minus, Plus, ShoppingCart, Trash2 } from "lucide-react"
+import { ShoppingCart } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
+import ChangeQuantityForm from "./change-quantity-form"
+import RemoveItemForm from "./remove-item-form"
 
 export default function CartDrawerDialog({ cart }: { cart: Cart }) {
   const [open, setOpen] = useState(false)
@@ -110,37 +112,8 @@ function List({ cart, className }: { cart: Cart; className?: string }) {
               </div>
 
               <div className="flex justify-between">
-                {/* 個数調整 */}
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="outline"
-                    size="icon-sm"
-                    // onClick={() =>
-                    //   onUpdateQuantity(item.id, Math.max(1, item.quantity - 1))
-                    // }
-                  >
-                    <Minus />
-                  </Button>
-                  <span className="w-8 text-center font-medium">
-                    {item.quantity}
-                  </span>
-                  <Button
-                    variant="outline"
-                    size="icon-sm"
-                    // onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
-                  >
-                    <Plus />
-                  </Button>
-                </div>
-                {/* 削除ボタン */}
-                <Button
-                  variant="ghost"
-                  size="icon-sm"
-                  // onClick={() => onRemoveItem(item.id)}
-                  className="text-destructive hover:bg-destructive/10 hover:text-destructive h-8 w-8 p-0"
-                >
-                  <Trash2 />
-                </Button>
+                <ChangeQuantityForm item={item} />
+                <RemoveItemForm productId={item.productId} />
               </div>
 
               {/* 小計 */}
