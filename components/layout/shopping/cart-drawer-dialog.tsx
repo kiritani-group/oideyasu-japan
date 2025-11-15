@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -50,7 +51,12 @@ export default function CartDrawerDialog({ cart }: { cart: Cart }) {
             <DrawerDescription>{description}</DrawerDescription>
           </DrawerHeader>
           <List className="px-4" cart={cart} />
-          <DrawerFooter className="pt-2">
+          <DrawerFooter>
+            <DrawerClose asChild>
+              <Button asChild disabled={cart.items.length === 0}>
+                <Link href="/checkout">購入手続きへ</Link>
+              </Button>
+            </DrawerClose>
             <DrawerClose asChild>
               <Button variant="outline">買い物を続ける</Button>
             </DrawerClose>
@@ -73,6 +79,11 @@ export default function CartDrawerDialog({ cart }: { cart: Cart }) {
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
         <List cart={cart} />
+        <DialogClose asChild>
+          <Button asChild disabled={cart.items.length === 0}>
+            <Link href="/checkout">購入手続きへ</Link>
+          </Button>
+        </DialogClose>
       </DialogContent>
     </Dialog>
   )
@@ -115,8 +126,6 @@ function List({ cart, className }: { cart: Cart; className?: string }) {
                 <ChangeQuantityForm item={item} />
                 <RemoveItemForm productId={item.productId} />
               </div>
-
-              {/* 小計 */}
             </div>
           ))}
         </div>
@@ -136,15 +145,6 @@ function List({ cart, className }: { cart: Cart; className?: string }) {
             .toLocaleString()}
         </span>
       </div>
-      {cart.items.length > 0 ? (
-        <Button asChild className="w-full">
-          <Link href="#">購入手続きへ</Link>
-        </Button>
-      ) : (
-        <Button disabled className="w-full">
-          購入手続きへ
-        </Button>
-      )}
     </div>
   )
 }
