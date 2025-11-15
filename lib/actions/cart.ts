@@ -9,10 +9,10 @@ export async function addCartAction(
   product: Cart["items"][number]["product"],
   quantity: number,
 ) {
-  const cookieStore = await cookies()
   const cartKey = await getCartKey()
   if (!cartKey) {
     const guestId = randomUUID()
+    const cookieStore = await cookies()
     cookieStore.set("guest_id", guestId, {
       path: "/",
       httpOnly: true,
