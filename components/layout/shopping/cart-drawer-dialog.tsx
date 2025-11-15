@@ -30,6 +30,7 @@ export default function CartDrawerDialog({ cart }: { cart: Cart }) {
   const [open, setOpen] = useState(false)
   const isMobile = useIsMobile()
 
+  const count = cart.items.reduce((acc, item) => acc + item.quantity, 0)
   const title = "ショッピングカート"
   const description = "カートの中身を確認・編集できます。"
   if (isMobile) {
@@ -38,11 +39,7 @@ export default function CartDrawerDialog({ cart }: { cart: Cart }) {
         <DrawerTrigger asChild>
           <Button variant="ghost" size="icon" className="relative size-8">
             <ShoppingCart className="size-6" />
-            {cart.items.length > 0 && (
-              <span className="bg-destructive absolute top-0 right-0 h-4 min-w-4 -translate-y-0.5 rounded-full text-center text-xs text-white">
-                {cart.items.reduce((acc, item) => acc + item.quantity, 0)}
-              </span>
-            )}
+            <CountBadge count={count} />
           </Button>
         </DrawerTrigger>
         <DrawerContent>
@@ -63,8 +60,9 @@ export default function CartDrawerDialog({ cart }: { cart: Cart }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon" className="size-8">
+        <Button variant="ghost" size="icon" className="relative size-8">
           <ShoppingCart className="size-6" />
+          <CountBadge count={count} />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
@@ -78,11 +76,20 @@ export default function CartDrawerDialog({ cart }: { cart: Cart }) {
   )
 }
 
+function CountBadge({ count }: { count: number }) {
+  if (count === 0) return null
+  return (
+    <span className="bg-destructive absolute top-0 right-0 h-4 min-w-4 -translate-y-0.5 rounded-full text-center text-xs text-white">
+      {count}
+    </span>
+  )
+}
+
 function List({ cart, className }: { cart: Cart; className?: string }) {
   return (
     <div className={cn("grid items-start gap-6", className)}>
       {cart.items.length > 0 ? (
-        <div className="-mr-2 max-h-[35vh] space-y-1 overflow-y-scroll pr-2">
+        <div className="-mr-2 max-h-[35vh] space-y-1 overflow-y-auto pr-2">
           {cart.items.map((item, index) => (
             <div key={index} className="space-y-3 rounded-lg border p-3">
               {/* 商品情報 */}
