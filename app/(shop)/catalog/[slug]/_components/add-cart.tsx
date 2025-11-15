@@ -3,6 +3,7 @@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
+import { addCartAction } from "@/lib/actions/cart"
 import {
   CheckCircle,
   CheckCircle2Icon,
@@ -11,7 +12,6 @@ import {
   ShoppingCart,
 } from "lucide-react"
 import { useActionState, useState } from "react"
-import { addCartAction } from "./_action"
 
 export default function AddCart({
   product,
@@ -36,8 +36,9 @@ export default function AddCart({
             <Button
               variant="ghost"
               size="icon"
+              disabled={quantity <= 1}
               onClick={decrementQuantity}
-              className="text-foreground hover:bg-muted h-10 w-10"
+              className="text-foreground hover:bg-muted cursor-pointer"
             >
               <Minus className="h-4 w-4" />
             </Button>
@@ -46,7 +47,7 @@ export default function AddCart({
               variant="ghost"
               size="icon"
               onClick={incrementQuantity}
-              className="text-foreground hover:bg-muted h-10 w-10"
+              className="text-foreground hover:bg-muted cursor-pointer"
             >
               <Plus className="h-4 w-4" />
             </Button>
@@ -82,7 +83,7 @@ export default function AddCart({
             カートに追加済み
           </Button>
           <div className="max-h-60 overflow-hidden pt-2 opacity-100 transition-all duration-1000 starting:max-h-0 starting:p-0 starting:opacity-0">
-            <Alert>
+            <Alert className="[&>svg]:text-emerald-500">
               <CheckCircle2Icon />
               <AlertTitle>カートに商品を追加しました！</AlertTitle>
               <AlertDescription>
