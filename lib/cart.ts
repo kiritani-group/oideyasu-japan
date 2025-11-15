@@ -57,3 +57,40 @@ export async function addToCart(
   await redis.hset(key, cart)
   await redis.expire(key, 60 * 60 * 24 * 30)
 }
+
+export async function removeFromCart(productId: string): Promise<void> {
+  const key = await getCartKey()
+  if (!key) return
+
+  const cart = await getCart()
+  if (!cart) return
+
+  // 指定の productId を持つアイテムを削除
+  cart.items = cart.items.filter((item) => item.productId !== productId)
+
+  cart.updatedAt = new Date()
+
+  await redis.hset(key, cart)
+  await redis.expire(key, 60 * 60 * 24 * 30) // 30日
+}
+
+export async function changeQuantity(
+  productId: string,
+  quantity: number,
+): Promise<void> {
+  if (quantity < 1) return
+  const key = await getCartKey()
+  if (!key) return
+
+  const cart = await getCart()
+  if (!cart) return
+
+  const item = cart.items.find((i) => i.productId === productId)
+  if (item) {
+    item.quantity = quantity
+    cart.updatedAt = new Date()
+  }
+
+  await redis.hset(key, cart)
+  await redis.expire(key, 60 * 60 * 24 * 30) // 30日
+}
