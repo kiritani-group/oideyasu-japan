@@ -51,6 +51,7 @@ async function fetchProduct(slug: string) {
       price: true,
       isInStock: true,
       description: true,
+      thumbnailUrl: true,
       images: { select: { url: true }, orderBy: { order: "asc" } },
     },
   })
