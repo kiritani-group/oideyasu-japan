@@ -11,6 +11,7 @@ export default function ProductImages({
     description: string | null
     price: number
     isInStock: boolean
+    thumbnailUrl: string | null
   }
 }) {
   return (

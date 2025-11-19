@@ -19,7 +19,12 @@ export default function AddForm({
   isInCart,
   quantityInCart,
 }: {
-  product: { id: string; name: string; price: number }
+  product: {
+    id: string
+    name: string
+    price: number
+    thumbnailUrl: string | null
+  }
   isInCart: boolean
   quantityInCart: number
 }) {
@@ -68,7 +73,8 @@ export default function AddForm({
           <span className="text-muted-foreground text-sm">
             合計: ¥
             {(
-              product.price * (!isInCart ? quantity : quantityInCart)
+              product.price *
+              (!isInCart ? quantity : Math.max(1, quantityInCart))
             ).toLocaleString()}
           </span>
         </div>
