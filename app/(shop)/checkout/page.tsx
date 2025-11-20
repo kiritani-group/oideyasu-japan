@@ -18,7 +18,7 @@ export default async function Page() {
     headers: await headers(),
   })
   const user = session?.user
-  if (user) redirect("checkout/customer")
+  if (user) redirect("/checkout/customer")
   return (
     <Card>
       <CardHeader>
