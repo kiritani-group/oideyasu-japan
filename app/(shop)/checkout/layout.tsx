@@ -7,7 +7,11 @@ import { usePathname } from "next/navigation"
 const steps = [
   { progress: 10, path: "/checkout", title: "ログイン" },
   { progress: 25, path: "/checkout/cart", title: "商品の確認" },
-  { progress: 40, path: "/checkout/customer", title: "お客様情報・お届け先" },
+  { progress: 40, path: "/checkout/customer", title: "お客様情報" },
+  { progress: 60, path: "/checkout/shipping", title: "お届け先情報" },
+  { progress: 85, path: "/checkout/delivery", title: "配送/支払い方法" },
+  { progress: 95, path: "/checkout/confirm", title: "最終確認" },
+  { progress: 100, path: "/checkout/payment", title: "お支払い" },
 ]
 
 export default function Layout({
