@@ -2,16 +2,52 @@ import { cookies, headers } from "next/headers"
 import { auth } from "./auth"
 import { redis } from "./redis"
 
+export type Address = {
+  postalCode: string
+  prefectureCode: number
+  prefecture: string
+  city: string
+  town: string
+  streetAddress: string | null
+  building: string | null
+}
+
 export type Cart = {
   items: {
     productId: string
-    product: { id: string; name: string; price: number }
+    product: {
+      id: string
+      name: string
+      price: number
+      thumbnailUrl: string | null
+    }
     quantity: number
   }[]
+  isGift?: boolean
+  buyer?: {
+    lastName: string
+    firstName: string
+    email: string
+    phone: string
+    address?: Address
+  }
+  recipient?: {
+    lastName: string
+    firstName: string
+    phone: string
+    address: Address
+  }
+  payment?: {
+    type: "deferred" | "immediate"
+    method: "cod" | "card" | "convenience" | "wallet" | "bank"
+  }
   updatedAt: Date | string
+  order?: {
+    id?: string
+  }
 }
 
-async function refreshCartTTL(key: string) {
+export async function refreshCartTTL(key: string) {
   // 30日 = 60 * 60 * 24 * 30 秒
   await redis.expire(key, 60 * 60 * 24 * 30)
 }
@@ -29,16 +65,16 @@ export async function getCartKey(): Promise<string | null> {
   return key
 }
 
-export async function getCart(): Promise<Cart> {
-  const key = await getCartKey()
+export async function getCart(cartKey?: string): Promise<Cart | null> {
+  const key = cartKey || (await getCartKey())
   if (!key) {
-    return { items: [], updatedAt: new Date() }
+    return null
   }
   const data: Cart | null = await redis.hgetall(key)
   if (data) {
     await redis.expire(key, 60 * 60 * 24 * 30)
   }
-  return data || { items: [], updatedAt: new Date() }
+  return data
 }
 
 export async function addToCart(
