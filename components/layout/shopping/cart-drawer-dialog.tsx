@@ -25,20 +25,26 @@ import { Cart } from "@/lib/cart"
 import { cn } from "@/lib/utils"
 import { ShoppingCart } from "lucide-react"
 import Link from "next/link"
-import { useState } from "react"
 import ChangeQuantityForm from "./change-quantity-form"
 import RemoveItemForm from "./remove-item-form"
 
 export default function CartDrawerDialog({ cart }: { cart: Cart }) {
-  const [open, setOpen] = useState(false)
   const isMobile = useIsMobile()
 
-  const count = cart.items.reduce((acc, item) => acc + item.quantity, 0)
+  const count = cart
+    ? cart.items.reduce((acc, item) => acc + item.quantity, 0)
+    : 0
+  const subtotal = cart
+    ? cart.items.reduce(
+        (acc, item) => acc + item.product.price * item.quantity,
+        0,
+      )
+    : 0
   const title = "ショッピングカート"
   const description = "カートの中身を確認・編集できます。"
   if (isMobile) {
     return (
-      <Drawer open={open} onOpenChange={setOpen}>
+      <Drawer>
         <DrawerTrigger asChild>
           <Button variant="ghost" size="icon" className="relative size-8">
             <ShoppingCart className="size-6" />
@@ -46,16 +52,21 @@ export default function CartDrawerDialog({ cart }: { cart: Cart }) {
           </Button>
         </DrawerTrigger>
         <DrawerContent>
-          <DrawerHeader className="text-left">
+          <DrawerHeader>
             <DrawerTitle>{title}</DrawerTitle>
             <DrawerDescription>{description}</DrawerDescription>
           </DrawerHeader>
-          <List className="px-4" cart={cart} />
+          <List className="mr-2 pr-2 pl-4" cart={cart} />
           <DrawerFooter>
+            <Subtotal count={count} subtotal={subtotal} />
             <DrawerClose asChild>
-              <Button asChild disabled={cart.items.length === 0}>
-                <Link href="/checkout">購入手続きへ</Link>
-              </Button>
+              {cart.items.length === 0 ? (
+                <Button disabled>購入手続きへ</Button>
+              ) : (
+                <Button asChild>
+                  <Link href="/checkout">購入手続きへ</Link>
+                </Button>
+              )}
             </DrawerClose>
             <DrawerClose asChild>
               <Button variant="outline">買い物を続ける</Button>
@@ -66,23 +77,28 @@ export default function CartDrawerDialog({ cart }: { cart: Cart }) {
     )
   }
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog>
       <DialogTrigger asChild>
         <Button variant="ghost" size="icon" className="relative size-8">
           <ShoppingCart className="size-6" />
           <CountBadge count={count} />
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="flex max-h-11/12 flex-col">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
-        <List cart={cart} />
+        <List cart={cart} className="-mr-2 pr-2" />
+        <Subtotal count={count} subtotal={subtotal} />
         <DialogClose asChild>
-          <Button asChild disabled={cart.items.length === 0}>
-            <Link href="/checkout">購入手続きへ</Link>
-          </Button>
+          {cart.items.length === 0 ? (
+            <Button disabled>購入手続きへ</Button>
+          ) : (
+            <Button asChild>
+              <Link href="/checkout">購入手続きへ</Link>
+            </Button>
+          )}
         </DialogClose>
       </DialogContent>
     </Dialog>
@@ -98,11 +114,22 @@ function CountBadge({ count }: { count: number }) {
   )
 }
 
+function Subtotal({ count, subtotal }: { count: number; subtotal: number }) {
+  return (
+    <div className="flex items-center justify-between px-2">
+      <span className="text-muted-foreground text-sm">小計 ({count}点)</span>
+      <span className="text-foreground text-2xl font-bold">
+        ¥{subtotal.toLocaleString()}
+      </span>
+    </div>
+  )
+}
+
 function List({ cart, className }: { cart: Cart; className?: string }) {
   return (
-    <div className={cn("grid items-start gap-6", className)}>
+    <div className={cn("min-h-0 flex-1 overflow-auto", className)}>
       {cart.items.length > 0 ? (
-        <div className="-mr-2 max-h-[35vh] space-y-1 overflow-y-auto pr-2">
+        <div className="space-y-1">
           {cart.items.map((item, index) => (
             <div key={index} className="space-y-3 rounded-lg border p-3">
               {/* 商品情報 */}
@@ -134,17 +161,6 @@ function List({ cart, className }: { cart: Cart; className?: string }) {
           現在選択された商品はありません
         </div>
       )}
-      <div className="flex items-center justify-between px-2">
-        <span className="text-muted-foreground text-sm">
-          小計 ({cart.items.reduce((acc, item) => acc + item.quantity, 0)}点)
-        </span>
-        <span className="text-foreground text-2xl font-bold">
-          ¥
-          {cart.items
-            .reduce((acc, item) => acc + item.product.price * item.quantity, 0)
-            .toLocaleString()}
-        </span>
-      </div>
     </div>
   )
 }
