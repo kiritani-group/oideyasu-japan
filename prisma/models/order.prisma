@@ -15,16 +15,18 @@ model Order {
   // 購入者情報
   buyerLastName  String
   buyerFirstName String
+  buyerPhone     String
   buyerEmail     String
-  buyerPhone     String?
+  buyerAddressId String
+  buyerAddress   Address  @relation("BuyerAddress",  fields: [buyerAddressId], references: [id])
 
   // 受取人情報（別人の場合あり）
   recipientLastName  String
   recipientFirstName String
+  recipientPhone     String
   recipientEmail     String?
-  recipientPhone     String?
-  shippingAddressId  String?
-  shippingAddress    Address? @relation(fields: [shippingAddressId], references: [id])
+  shippingAddressId  String
+  shippingAddress    Address @relation("ShippingAddress",fields: [shippingAddressId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -34,6 +36,7 @@ model Order {
 
 enum OrderStatus {
   PENDING
+  SHIPPED_PENDING_PAYMENT
   PAID
   SHIPPED
   DELIVERED

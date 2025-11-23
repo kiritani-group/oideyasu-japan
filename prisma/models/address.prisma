@@ -4,26 +4,23 @@
 model Address {
   id String @id @default(cuid())
 
-  // 名前情報
-  lastName  String
-  firstName String
-
   // 住所情報（日本仕様）
-  postalCode    String
-  prefecture    String // "東京都"
-  city          String // "渋谷区"
-  town          String // "神南1丁目"
-  streetAddress String? // "19-11"など（APIでは得られない）
-  building      String? // "パークウェースクエア2 4F"など
-  phoneNumber   String
-  userId        String? // 会員が永続的に保存する場合のみ
-  user          User?    @relation(fields: [userId], references: [id])
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  postalCode     String
+  prefectureCode Int
+  prefecture     String // "東京都"
+  city           String // "渋谷区"
+  town           String // "神南1丁目"
+  streetAddress  String? // "19-11"など（APIでは得られない）
+  building       String? // "パークウェースクエア2 4F"など
+  userId         String? // 会員が永続的に保存する場合のみ
+  user           User?    @relation(fields: [userId], references: [id])
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   // 住所の属性
   label     String? // "自宅", "勤務先", "実家" など任意ラベル
   isDefault Boolean @default(false)
 
-  orders Order[]
+  buyerOrders     Order[] @relation("BuyerAddress")
+  shippingOrders  Order[] @relation("ShippingAddress")
 }
