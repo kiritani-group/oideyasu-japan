@@ -3,7 +3,8 @@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
-import { addCartAction } from "@/lib/actions/cart"
+import { updateCartItemAction } from "@/lib/actions/cart"
+import { Session } from "@/lib/auth"
 import { cn } from "@/lib/utils"
 import {
   CheckCircle,
@@ -13,12 +14,15 @@ import {
   ShoppingCart,
 } from "lucide-react"
 import { useActionState, useState } from "react"
+import Login from "./login"
 
 export default function AddForm({
+  user,
   product,
   isInCart,
   quantityInCart,
 }: {
+  user: Session["user"] | undefined
   product: {
     id: string
     name: string
@@ -30,7 +34,7 @@ export default function AddForm({
 }) {
   const [quantity, setQuantity] = useState(1)
   const [, action, waiting] = useActionState(
-    addCartAction.bind(null, product, quantity),
+    () => updateCartItemAction(product, quantity),
     { status: "IDLE" },
   )
   const incrementQuantity = () => setQuantity((prev) => prev + 1)
@@ -79,7 +83,9 @@ export default function AddForm({
           </span>
         </div>
       </div>
-      {!isInCart ? (
+      {!user ? (
+        <Login product={product} quantity={quantity} />
+      ) : !isInCart ? (
         <form action={action}>
           <Button
             size="lg"
