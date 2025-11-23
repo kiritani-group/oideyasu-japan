@@ -1,5 +1,6 @@
 "use server"
 
+import { getSessionUser } from "@/lib/auth"
 import type { Cart } from "@/lib/cart"
 import { getCart, getCartKey, refreshCartTTL } from "@/lib/cart"
 import { redis } from "@/lib/redis"
@@ -28,16 +29,9 @@ const paymentSchema: z.ZodType<NonNullable<Cart["payment"]>> = z.object({
 export async function updateDeliveryAction(
   payment: NonNullable<Cart["payment"]>,
 ): Promise<ActionState> {
-  const cartKey = await getCartKey()
-  if (!cartKey) {
-    return {
-      type: "ERROR",
-      message:
-        "カート情報の読み取りに失敗しました。ページの再読み込みをお試しいただくか、店舗までお問い合わせください。",
-    }
-  }
-  const cart: Cart | null = await getCart(cartKey)
-  if (!cart || !cart.buyer) {
+  const user = await getSessionUser()
+  const cart: Cart | null = await getCart(user?.id)
+  if (!user || !cart || !cart.buyer) {
     return {
       type: "ERROR",
       message:
@@ -59,6 +53,7 @@ export async function updateDeliveryAction(
       payment: validatedFields.data,
       updatedAt: new Date(),
     }
+    const cartKey = getCartKey(user.id)
     await redis.hset(cartKey, newCart)
     await refreshCartTTL(cartKey)
   } catch (e) {

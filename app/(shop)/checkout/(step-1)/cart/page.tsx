@@ -17,14 +17,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { getSessionUser } from "@/lib/auth"
 import { getCart } from "@/lib/cart"
 import { AlertCircleIcon } from "lucide-react"
 import Link from "next/link"
 import { redirect } from "next/navigation"
 
 export default async function Page() {
-  const cart = await getCart()
-  if (!cart) redirect("/")
+  const user = await getSessionUser()
+  const cart = await getCart(user?.id)
+  if (!cart) redirect("/checkout")
   const items = cart.items
   const subtotalAmount = items.reduce(
     (acc, item) => acc + item.product.price * item.quantity,

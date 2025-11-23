@@ -73,8 +73,10 @@ const PAYMENT_OPTIONS: (NonNullable<Cart["payment"]> & {
 
 export default function DeriveryForm({
   paymentDefault,
+  subtotalAmount,
 }: {
   paymentDefault: Cart["payment"]
+  subtotalAmount: number
 }) {
   const [payment, setPayment] = useState<NonNullable<Cart["payment"]>>(
     paymentDefault || { type: "immediate", method: "card" },
@@ -122,6 +124,9 @@ export default function DeriveryForm({
                   value={option.method}
                   id={option.method}
                   className="mt-4 ml-4"
+                  disabled={
+                    option.method === "convenience" && subtotalAmount <= 3300
+                  }
                 />
                 <Label
                   htmlFor={option.method}

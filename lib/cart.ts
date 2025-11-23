@@ -1,8 +1,8 @@
-import { cookies, headers } from "next/headers"
-import { auth } from "./auth"
+import { cacheTag } from "next/cache"
 import { redis } from "./redis"
 
 export type Address = {
+  id?: string
   postalCode: string
   prefectureCode: number
   prefecture: string
@@ -47,118 +47,78 @@ export type Cart = {
   }
 }
 
+export function getCartKey(userId: string) {
+  return `cart:${userId}`
+}
+
 export async function refreshCartTTL(key: string) {
   // 30日 = 60 * 60 * 24 * 30 秒
   await redis.expire(key, 60 * 60 * 24 * 30)
 }
 
-export async function getCartKey(): Promise<string | null> {
-  const session = await auth.api.getSession({ headers: await headers() })
-  const userId = session?.user?.id
-  const cookieStore = await cookies()
-  const guestId = cookieStore.get("guest_id")?.value
-  const key = userId
-    ? `cart:user:${userId}`
-    : guestId
-      ? `cart:guest:${guestId}`
-      : null
-  return key
-}
-
-export async function getCart(cartKey?: string): Promise<Cart | null> {
-  const key = cartKey || (await getCartKey())
-  if (!key) {
+export async function getCart(
+  userId: string | undefined,
+): Promise<Cart | null> {
+  "use cache: private"
+  cacheTag("cart")
+  if (!userId) {
     return null
   }
+  const key = getCartKey(userId)
   const data: Cart | null = await redis.hgetall(key)
   if (data) {
     await redis.expire(key, 60 * 60 * 24 * 30)
+    return data
+  } else {
+    const newCart: Cart = {
+      items: [],
+      updatedAt: new Date(),
+    }
+
+    await redis.hset(key, newCart)
+    await refreshCartTTL(key)
+    const created: Cart | null = await redis.hgetall(key)
+    return created
   }
-  return data
 }
 
-export async function addToCart(
+/**
+ * カートに商品追加 / 更新 / 削除
+ * quantity = null または <1 の場合は削除
+ */
+export async function updateCartItem(
+  userId: string | undefined,
   product: Cart["items"][number]["product"],
-  quantity: number = 1,
+  quantity: number | null,
 ): Promise<void> {
-  const key = await getCartKey()
-  if (!key) return
+  if (!userId) return
 
-  const cart = await getCart()
-  if (!cart) return
+  const key = getCartKey(userId)
+  let cart = await getCart(userId)
 
-  const exists = cart.items.some((item) => item.productId === product.id)
-
-  let newItems = cart.items.map((item) =>
-    item.productId === product.id
-      ? {
-          ...item,
-          product, // product を最新化
-          quantity,
-        }
-      : item,
-  )
-
-  // 新規で追加すべきなら push
-  if (!exists && quantity > 0) {
-    newItems = [
-      ...newItems,
-      {
-        productId: product.id,
-        product,
-        quantity,
-      },
-    ]
+  // カートが存在しない場合は新規作成
+  if (!cart) {
+    cart = { items: [], updatedAt: new Date() }
   }
 
-  // 数量が 0 以下の場合は削除
-  newItems = newItems.filter((item) => item.quantity > 0)
+  const exists = cart.items.some((i) => i.productId === product.id)
 
-  const newCart = {
-    ...cart,
-    items: newItems,
-    updatedAt: new Date(),
-  }
+  let newItems: Cart["items"]
 
-  await redis.hset(key, newCart)
-  await refreshCartTTL(key)
-}
-
-export async function removeFromCart(productId: string): Promise<void> {
-  const key = await getCartKey()
-  if (!key) return
-
-  const cart = await getCart()
-  if (!cart) return
-
-  const newCart = {
-    ...cart,
-    items: cart.items.filter((item) => item.productId !== productId),
-    updatedAt: new Date(),
-  }
-
-  await redis.hset(key, newCart)
-  await refreshCartTTL(key)
-}
-
-export async function changeQuantity(
-  productId: string,
-  quantity: number,
-): Promise<void> {
-  if (quantity < 1) return
-  const key = await getCartKey()
-  if (!key) return
-
-  const cart = await getCart()
-  if (!cart) return
-
-  const newItems = cart.items
-    .map((item) =>
-      item.productId === productId ? { ...item, quantity } : item,
+  if (quantity === null || quantity < 1) {
+    // 削除
+    newItems = cart.items.filter((i) => i.productId !== product.id)
+  } else if (exists) {
+    // 既存商品の数量更新
+    newItems = cart.items.map((i) =>
+      i.productId === product.id ? { ...i, product, quantity } : i,
     )
-    .filter((item) => item.quantity > 0)
+  } else {
+    // 新規追加
+    newItems = [...cart.items, { productId: product.id, product, quantity }]
+  }
 
-  const newCart = {
+  const newCart: Cart = {
     ...cart,
     items: newItems,
     updatedAt: new Date(),

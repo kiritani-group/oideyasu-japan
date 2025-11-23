@@ -12,13 +12,25 @@ import Link from "next/link"
 import { useActionState, useState } from "react"
 import { updateCustomerAction } from "./_action"
 
-export default function CustomerForm({ buyer }: { buyer: Cart["buyer"] }) {
+export default function CustomerForm({
+  buyer,
+  userEmail,
+  userFirstName,
+  userLastName,
+  userPhone,
+}: {
+  buyer: Cart["buyer"]
+  userEmail: string | null
+  userFirstName: string | null
+  userLastName: string | null
+  userPhone: string | null
+}) {
   const [customerInfo, setCustomerInfo] = useState(
     buyer || {
-      lastName: "",
-      firstName: "",
-      phone: "",
-      email: "",
+      lastName: userLastName || "",
+      firstName: userFirstName || "",
+      phone: userPhone || "",
+      email: userEmail || "",
     },
   )
   const [state, action, isPending] = useActionState(

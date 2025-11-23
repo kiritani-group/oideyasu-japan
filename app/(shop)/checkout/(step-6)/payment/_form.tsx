@@ -10,14 +10,16 @@ const stripePromise = loadStripe(
 
 export default function CheckoutForm({
   clientSecret,
+  totalAmount,
 }: {
   clientSecret: string
+  totalAmount: number
 }) {
   const options: StripeElementsOptions = {
-    appearance: {
-      theme: "flat",
-    },
-    clientSecret,
+    mode: "payment",
+    amount: totalAmount,
+    currency: "jpy",
+    appearance: {},
   }
   return (
     <Elements stripe={stripePromise} options={options}>

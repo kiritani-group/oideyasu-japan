@@ -1,33 +1,31 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { changeQuantityAction } from "@/lib/actions/cart"
+import { updateCartItemAction } from "@/lib/actions/cart"
+import { Cart } from "@/lib/cart"
 import { Minus, Plus } from "lucide-react"
 import { useOptimistic } from "react"
 
 export default function ChangeQuantityForm({
   item,
 }: {
-  item: {
-    productId: string
-    quantity: number
-  }
+  item: Cart["items"][number]
 }) {
   const [optimisticQuantity, addOptimisticQuantity] = useOptimistic(
     item.quantity,
-    (state, newQuantity: number) => newQuantity,
+    (_, newQuantity: number) => newQuantity,
   )
 
   const handleDecrease = async () => {
     const newQuantity = Math.max(1, optimisticQuantity - 1)
     addOptimisticQuantity(newQuantity)
-    await changeQuantityAction(item.productId, newQuantity)
+    await updateCartItemAction(item.product, newQuantity)
   }
 
   const handleIncrease = async () => {
     const newQuantity = optimisticQuantity + 1
     addOptimisticQuantity(newQuantity)
-    await changeQuantityAction(item.productId, newQuantity)
+    await updateCartItemAction(item.product, newQuantity)
   }
 
   return (

@@ -1,13 +1,18 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { removeProductAction } from "@/lib/actions/cart"
+import { updateCartItemAction } from "@/lib/actions/cart"
+import { Cart } from "@/lib/cart"
 import { Trash2 } from "lucide-react"
 import { useActionState } from "react"
 
-export default function RemoveItemForm({ productId }: { productId: string }) {
+export default function RemoveItemForm({
+  item,
+}: {
+  item: Cart["items"][number]
+}) {
   const [, action, waiting] = useActionState(
-    removeProductAction.bind(null, productId),
+    () => updateCartItemAction(item.product, 0),
     { status: "IDLE" },
   )
   return (

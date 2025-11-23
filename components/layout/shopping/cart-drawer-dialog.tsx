@@ -151,7 +151,7 @@ function List({ cart, className }: { cart: Cart; className?: string }) {
 
               <div className="flex justify-between">
                 <ChangeQuantityForm item={item} />
-                <RemoveItemForm productId={item.productId} />
+                <RemoveItemForm item={item} />
               </div>
             </div>
           ))}

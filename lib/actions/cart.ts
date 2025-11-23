@@ -1,56 +1,22 @@
 "use server"
 
-import {
-  addToCart,
-  Cart,
-  changeQuantity,
-  getCartKey,
-  removeFromCart,
-} from "@/lib/cart"
-import { randomUUID } from "crypto"
+import { Cart, updateCartItem } from "@/lib/cart"
 import { updateTag } from "next/cache"
-import { cookies } from "next/headers"
+import { getSessionUser } from "../auth"
 
-export async function addCartAction(
+export async function updateCartItemAction(
   product: Cart["items"][number]["product"],
   quantity: number,
+  waitTime: number = 500,
 ) {
-  const cartKey = await getCartKey()
-  if (!cartKey) {
-    const guestId = randomUUID()
-    const cookieStore = await cookies()
-    cookieStore.set("guest_id", guestId, {
-      path: "/",
-      httpOnly: true,
-      sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 30, // 30日
-    })
+  const user = await getSessionUser()
+  if (!user) {
+    return { status: "ERROR" }
   }
-  await addToCart(product, quantity)
+  await updateCartItem(user.id, product, quantity)
   updateTag("cart")
-  await new Promise((resolve) => setTimeout(resolve, 500))
-  return { status: "SUCCESS" }
-}
-
-export async function removeProductAction(productId: string) {
-  const cartKey = await getCartKey()
-  if (!cartKey) {
-    return { status: "IDLE" }
+  if (waitTime) {
+    await new Promise((resolve) => setTimeout(resolve, waitTime))
   }
-  await removeFromCart(productId)
-  updateTag("cart")
-  return { status: "SUCCESS" }
-}
-
-export async function changeQuantityAction(
-  productId: string,
-  quantity: number,
-) {
-  const cartKey = await getCartKey()
-  if (!cartKey) {
-    return { status: "IDLE" }
-  }
-  await changeQuantity(productId, quantity)
-  updateTag("cart")
   return { status: "SUCCESS" }
 }

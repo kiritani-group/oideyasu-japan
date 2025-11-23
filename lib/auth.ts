@@ -1,11 +1,11 @@
 import { betterAuth } from "better-auth"
 import { prismaAdapter } from "better-auth/adapters/prisma"
 import { nextCookies } from "better-auth/next-js"
-import { magicLink } from "better-auth/plugins"
+import { anonymous, magicLink } from "better-auth/plugins"
+import { headers } from "next/headers"
 import { createTransport } from "nodemailer"
 import { Role } from "./generated/prisma/enums"
 import prisma from "./prisma"
-
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "postgresql",
@@ -24,6 +24,14 @@ export const auth = betterAuth({
   },
   user: {
     additionalFields: {
+      firstName: {
+        type: "string",
+        required: false,
+      },
+      lastName: {
+        type: "string",
+        required: false,
+      },
       role: {
         type: Object.values(Role),
       },
@@ -36,6 +44,7 @@ export const auth = betterAuth({
     },
   },
   plugins: [
+    anonymous(),
     magicLink({
       sendMagicLink: async ({ email, url }) => {
         console.log(`${email} にメールを送信します...`)
@@ -134,3 +143,13 @@ function html({ url, host }: { url: string; host: string }) {
 function text({ url, host }: { url: string; host: string }) {
   return `${host}にログインします。\n${url}\n\n`
 }
+
+export async function getSessionUser() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  })
+  const user = session?.user
+  return user
+}
+
+export type Session = typeof auth.$Infer.Session

@@ -7,18 +7,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { auth } from "@/lib/auth"
+import { getSessionUser } from "@/lib/auth"
 import { MapPin, Package } from "lucide-react"
-import { headers } from "next/headers"
 import Link from "next/link"
 import { redirect } from "next/navigation"
 
 export default async function Page() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  })
-  const user = session?.user
-  if (user) redirect("/checkout/customer")
+  const user = await getSessionUser()
+  const isAnonymous = user ? user?.isAnonymous || false : false
+  if (user && !isAnonymous) redirect("/checkout/cart")
   return (
     <Card>
       <CardHeader>

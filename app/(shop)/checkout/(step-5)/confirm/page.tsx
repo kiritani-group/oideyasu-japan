@@ -7,38 +7,28 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Cart, getCart } from "@/lib/cart"
-import { CreditCard, Landmark, Smartphone, Store, Truck } from "lucide-react"
+import { Cart } from "@/lib/cart"
+import {
+  BadgeJapaneseYen,
+  Box,
+  CircleUser,
+  CreditCard,
+  Landmark,
+  List,
+  MapPin,
+  Smartphone,
+  Store,
+  Truck,
+} from "lucide-react"
+import Image from "next/image"
 import Link from "next/link"
 import { ReactNode } from "react"
+import { getData } from "./_data"
+import ConfirmForm from "./_form"
 
 export default async function Page() {
-  const cart = await getCart()
-  // if (!cart) redirect("/")
-  // if (!cart.buyer) redirect("/checkout/customer")
-  // if (
-  //   cart.isGift === undefined ||
-  //   !cart.buyer.address ||
-  //   (cart.isGift && !cart.recipient)
-  // )
-  //   redirect("/checkout/shipping")
-  // if (!cart.payment) redirect("/checkout/delivery")
-
-  // const items = cart.items
-  // const subtotalAmount = items.reduce(
-  //   (acc, item) => acc + item.product.price * item.quantity,
-  //   0,
-  // )
-  // const shippingFee = subtotalAmount >= 10000 ? 0 : 770
-  // const totalAmount = subtotalAmount + shippingFee
-
-  // const { address: buyerAdress, ...buyer } = cart.buyer
-  // const { recipient: recipientAddress, ...redirect } = cart?.recipient
-
-  // const payment = PAYMENT_OPTIONS.find((o) => o.method === cart.payment?.method)
-
-  // const shippingAddress = isGift ? recipient : buyerWithoutEmail
-
+  const cart = await getData()
+  const payment = PAYMENT_OPTIONS.find((o) => o.method === cart.payment.method)
   return (
     <Card>
       <CardHeader>
@@ -48,22 +38,26 @@ export default async function Page() {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-5">
-        {/* <section>
+        <section>
           <h3 className="flex items-center gap-1.5 pb-2 text-2xl font-bold">
             <List />
             注文商品
           </h3>
           <div className="bg-muted divide-y rounded-lg p-2">
-            {items.map((item) => (
+            {cart.items.map((item) => (
               <div key={item.productId} className="flex gap-4 p-2">
-                <div className="bg-background relative size-16 shrink-0 overflow-hidden rounded-lg @xl:size-24">
-                  <Image
-                    src={"/placeholder.svg"}
-                    fill
-                    alt={item.product.name}
-                    sizes="80px"
-                    className="object-cover"
-                  />
+                <div className="bg-background relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-lg @xl:size-24">
+                  {item.product.thumbnailUrl ? (
+                    <Image
+                      src={"/placeholder.svg"}
+                      fill
+                      alt={item.product.name}
+                      sizes="80px"
+                      className="object-cover"
+                    />
+                  ) : (
+                    <Box className="size-10" />
+                  )}
                 </div>
                 <div className="flex flex-1 flex-col justify-between">
                   <div>
@@ -91,7 +85,7 @@ export default async function Page() {
                 お名前
               </p>
               <p className="indent-4 font-medium">
-                {[shippingAddress.lastName, shippingAddress.firstName, "様"]
+                {[cart.recipient.lastName, cart.recipient.firstName, "様"]
                   .filter(Boolean)
                   .join(" ")}
               </p>
@@ -100,16 +94,16 @@ export default async function Page() {
               <p className="text-muted-foreground text-sm font-medium">
                 ご住所
               </p>
-              <p className="indent-4 font-medium">{`〒${shippingAddress.postalCode.slice(0, 3)}-${shippingAddress.postalCode.slice(3)}`}</p>
+              <p className="indent-4 font-medium">{`〒${cart.recipient.address.postalCode.slice(0, 3)}-${cart.recipient.address.postalCode.slice(3)}`}</p>
               <p className="indent-4 leading-tight font-medium">
                 {[
-                  shippingAddress.prefecture,
-                  shippingAddress.city,
-                  shippingAddress.town,
-                  shippingAddress.streetAddress,
-                  shippingAddress.building,
+                  cart.recipient.address.prefecture,
+                  cart.recipient.address.city,
+                  cart.recipient.address.town,
+                  cart.recipient.address.streetAddress,
+                  cart.recipient.address.building,
                 ]
-                  .filter(Boolean) // 空文字・null・undefined を除外
+                  .filter(Boolean)
                   .join(" ")}
               </p>
             </div>
@@ -117,9 +111,7 @@ export default async function Page() {
               <p className="text-muted-foreground text-sm font-medium">
                 お電話番号
               </p>
-              <p className="indent-4 font-medium">
-                {shippingAddress.phoneNumber}
-              </p>
+              <p className="indent-4 font-medium">{cart.recipient.phone}</p>
             </div>
           </div>
         </section>
@@ -134,7 +126,7 @@ export default async function Page() {
                 お名前
               </p>
               <p className="indent-4 font-medium">
-                {[buyer.lastName, buyer.firstName, "様"]
+                {[cart.buyer.lastName, cart.buyer.firstName, "様"]
                   .filter(Boolean)
                   .join(" ")}
               </p>
@@ -143,24 +135,24 @@ export default async function Page() {
               <p className="text-muted-foreground text-sm font-medium">
                 メールアドレス
               </p>
-              <p className="indent-4 font-medium">{buyer.email}</p>
+              <p className="indent-4 font-medium">{cart.buyer.email}</p>
             </div>
             <div>
               <p className="text-muted-foreground text-sm font-medium">
                 ご住所
               </p>
-              {isGift ? (
+              {cart.isGift ? (
                 <>
-                  <p className="indent-4 font-medium">{`〒${buyer.postalCode.slice(0, 3)}-${buyer.postalCode.slice(3)}`}</p>
+                  <p className="indent-4 font-medium">{`〒${cart.buyer.address.postalCode.slice(0, 3)}-${cart.buyer.address.postalCode.slice(3)}`}</p>
                   <p className="indent-4 leading-tight font-medium">
                     {[
-                      buyer.prefecture,
-                      buyer.city,
-                      buyer.town,
-                      buyer.streetAddress,
-                      buyer.building,
+                      cart.buyer.address.prefecture,
+                      cart.buyer.address.city,
+                      cart.buyer.address.town,
+                      cart.buyer.address.streetAddress,
+                      cart.buyer.address.building,
                     ]
-                      .filter(Boolean) // 空文字・null・undefined を除外
+                      .filter(Boolean)
                       .join(" ")}
                   </p>
                 </>
@@ -172,8 +164,8 @@ export default async function Page() {
               <p className="text-muted-foreground text-sm font-medium">
                 お電話番号
               </p>
-              {isGift ? (
-                <p className="indent-4 font-medium">{buyer.phoneNumber}</p>
+              {cart.isGift ? (
+                <p className="indent-4 font-medium">{cart.buyer.phone}</p>
               ) : (
                 <p className="indent-4 font-medium">- お届け先と同じ -</p>
               )}
@@ -209,40 +201,42 @@ export default async function Page() {
                 <p className="flex items-end justify-between indent-4 text-sm">
                   小計
                   <span className="text-base">
-                    ¥{subtotalAmount.toLocaleString()}
+                    ¥{cart.subtotalAmount.toLocaleString()}
                   </span>
                 </p>
                 <p className="flex items-end justify-between indent-4 text-sm">
                   配送料
                   <span className="text-base">
-                    {shippingFee ? `¥${shippingFee.toLocaleString()}` : "無料"}
+                    {cart.shippingFee
+                      ? `¥${cart.shippingFee.toLocaleString()}`
+                      : "無料"}
                   </span>
                 </p>
-                <p className="flex items-end justify-between indent-4 text-sm">
-                  代引き手数料
-                  <span className="text-base">
-                    {shippingFee ? `¥${shippingFee.toLocaleString()}` : "無料"}
-                  </span>
-                </p>
+                {cart.payment.method === "cod" && cart.codFee && (
+                  <p className="flex items-end justify-between indent-4 text-sm">
+                    代引き手数料
+                    <span className="text-base">
+                      ¥{cart.codFee.toLocaleString()}
+                    </span>
+                  </p>
+                )}
               </div>
               <div className="mt-3 mb-2 ml-4 border-b" />
               <p className="flex items-center justify-between indent-4 font-medium">
                 ご請求額
                 <span className="items-end text-2xl font-medium">
-                  ¥{totalAmount.toLocaleString()}
+                  ¥{cart.totalAmount.toLocaleString()}
                 </span>
               </p>
             </div>
           </div>
-        </section> */}
+        </section>
       </CardContent>
       <CardFooter className="justify-between">
         <Button asChild variant="secondary">
           <Link href="/checkout/delivery">戻る</Link>
         </Button>
-        <Button asChild>
-          <Link href="/checkout/payment">注文を確定して支払いへ</Link>
-        </Button>
+        <ConfirmForm />
       </CardFooter>
     </Card>
   )

@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button"
 import { CardContent, CardFooter } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import type { Address, Cart } from "@/lib/cart"
 import { cn } from "@/lib/utils"
 import { AlertCircleIcon, Gift, Package } from "lucide-react"
 import Link from "next/link"
@@ -14,45 +13,30 @@ import { updateShippingAction } from "./_action"
 import AddressForm from "./_address-form"
 import type { AddressWithoutNull } from "./_types"
 
-const normalizeAddress = (addr?: Address): AddressWithoutNull => ({
-  postalCode: addr?.postalCode ?? "",
-  prefectureCode: addr?.prefectureCode ?? 0,
-  prefecture: addr?.prefecture ?? "",
-  city: addr?.city ?? "",
-  town: addr?.town ?? "",
-  streetAddress: addr?.streetAddress ?? "",
-  building: addr?.building ?? "",
-})
-
 export default function ShippingForm({
   isGiftDefault,
   buyerDefault,
   recipientDefault,
 }: {
   isGiftDefault: boolean
-  buyerDefault: Omit<NonNullable<Cart["buyer"]>, "email">
-  recipientDefault: Cart["recipient"]
+  buyerDefault: {
+    address: AddressWithoutNull
+    lastName: string
+    firstName: string
+    phone: string
+  }
+  recipientDefault: {
+    address: AddressWithoutNull
+    lastName: string
+    firstName: string
+    phone: string
+  }
 }) {
   const [shippingType, setShippingType] = useState(
     isGiftDefault ? "gift" : "self",
   )
-  const [buyer, setBuyer] = useState({
-    ...buyerDefault,
-    address: normalizeAddress(buyerDefault.address),
-  })
-  const [recipient, setRecipient] = useState(
-    recipientDefault
-      ? {
-          ...recipientDefault,
-          address: normalizeAddress(recipientDefault.address),
-        }
-      : {
-          lastName: "",
-          firstName: "",
-          phone: "",
-          address: normalizeAddress(),
-        },
-  )
+  const [buyer, setBuyer] = useState(buyerDefault)
+  const [recipient, setRecipient] = useState(recipientDefault)
   const [state, action, isPending] = useActionState(
     () => updateShippingAction(shippingType === "gift", buyer, recipient),
     {
