@@ -5,7 +5,8 @@ import { anonymous, magicLink } from "better-auth/plugins"
 import { headers } from "next/headers"
 import { createTransport } from "nodemailer"
 import { Role } from "./generated/prisma/enums"
-import prisma from "./prisma"
+import prisma from "./prisma/accelerate"
+
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "postgresql",

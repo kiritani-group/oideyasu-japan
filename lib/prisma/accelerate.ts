@@ -1,11 +1,9 @@
 import { PrismaClient } from "@/lib/generated/prisma/client"
-import { PrismaPg } from "@prisma/adapter-pg"
 import { withAccelerate } from "@prisma/extension-accelerate"
 
-const connectionString = `${process.env.DATABASE_URL}`
-
-const adapter = new PrismaPg({ connectionString })
-const prisma = new PrismaClient({ adapter }).$extends(withAccelerate())
+const prisma = new PrismaClient({
+  accelerateUrl: process.env.PRISMA_DATABASE_URL || "",
+}).$extends(withAccelerate())
 
 const globalForPrisma = global as unknown as { prisma: typeof prisma }
 
