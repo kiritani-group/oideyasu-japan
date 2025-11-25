@@ -40,7 +40,6 @@ export async function getData() {
     cart,
     items,
     buyer: { ...buyer, address },
-    buyerEmail: buyer.email,
     isGift,
     recipient:
       isGift && cart.recipient ? cart.recipient : { ...buyer, address },

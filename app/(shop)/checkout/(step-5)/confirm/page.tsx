@@ -185,9 +185,6 @@ export default async function Page() {
               {payment ? (
                 <div>
                   <p className="indent-4 font-medium">{payment.name}</p>
-                  <p className="text-foreground/80 indent-4 text-xs">
-                    ご注文確定後にお支払い方法をご案内いたします。
-                  </p>
                 </div>
               ) : (
                 <p>不明</p>
