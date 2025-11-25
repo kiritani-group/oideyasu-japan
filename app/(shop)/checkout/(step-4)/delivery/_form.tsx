@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils"
 import {
   AlertCircleIcon,
   CircleQuestionMark,
+  CircleSlash2,
   CreditCard,
   Landmark,
   Smartphone,
@@ -65,7 +66,7 @@ const PAYMENT_OPTIONS: (NonNullable<Cart["payment"]> & {
     method: "cod",
     name: "代金引換（代引き）",
     description:
-      "商品受け取り時に配達員に現金でお支払い。購入金額に応じた代引き手数料がかかります。",
+      "商品受け取り時に配達員に現金でお支払い。購入金額に応じた代引き手数料がかかります。また、自分用に購入される場合のみご利用可能いただけます。",
     icon: <Truck className="size-8" />,
     type: "deferred",
   },
@@ -74,9 +75,11 @@ const PAYMENT_OPTIONS: (NonNullable<Cart["payment"]> & {
 export default function DeriveryForm({
   paymentDefault,
   subtotalAmount,
+  isGift,
 }: {
   paymentDefault: Cart["payment"]
   subtotalAmount: number
+  isGift: boolean
 }) {
   const [payment, setPayment] = useState<NonNullable<Cart["payment"]>>(
     paymentDefault || { type: "immediate", method: "card" },
@@ -110,90 +113,105 @@ export default function DeriveryForm({
               setPayment({ type, method })
             }}
           >
-            {PAYMENT_OPTIONS.map((option) => (
-              <div
-                key={option.method}
-                className={cn(
-                  "relative flex cursor-pointer items-start rounded-lg border-2 transition-all",
-                  option.method === payment.method
-                    ? "border-primary bg-primary/5"
-                    : "border-border hover:border-primary/50 bg-card",
-                )}
-              >
-                <RadioGroupItem
-                  value={option.method}
-                  id={option.method}
-                  className="mt-4 ml-4"
-                  disabled={
-                    option.method === "convenience" && subtotalAmount <= 3300
-                  }
-                />
-                <Label
-                  htmlFor={option.method}
-                  className="-ml-8 flex-1 cursor-pointer p-4 pl-12"
+            {PAYMENT_OPTIONS.map((option) => {
+              const disabled =
+                (option.method === "convenience" && subtotalAmount <= 3300) ||
+                (option.method === "cod" && isGift === true)
+              return (
+                <div
+                  key={option.method}
+                  className={cn(
+                    "relative flex items-start rounded-lg border-2 transition-all",
+                    option.method === payment.method
+                      ? "border-primary bg-primary/5"
+                      : "bg-card",
+
+                    option.method !== payment.method &&
+                      !disabled &&
+                      "hover:border-primary/50",
+                  )}
                 >
-                  <div>
-                    <div className="mb-3 flex items-center justify-between text-4xl">
-                      {option.icon}
-                      {option.method === "cod" && (
-                        <Popover>
-                          <PopoverTrigger className="text-muted-foreground flex text-xs underline">
-                            <CircleQuestionMark className="mx-1 size-4" />
-                            手数料
-                          </PopoverTrigger>
-                          <PopoverContent className="w-fit space-y-2.5 text-base">
-                            <div className="font-bold">
-                              代引き手数料
-                              <span className="text-muted-foreground ml-1 text-sm">
-                                (税込み)
-                              </span>
-                            </div>
-                            <ul className="space-y-1 text-sm">
-                              <li>
-                                <div>
-                                  <div>・商品購入金額 10,000円未満</div>
-                                  <p className="pl-8">→ 330円</p>
-                                </div>
-                              </li>
-                              <li>
-                                <div>
-                                  <div>・10,000円以上 30,000円未満</div>
-                                  <p className="pl-8">→ 440円</p>
-                                </div>
-                              </li>
-                              <li>
-                                <div>
-                                  <div>・30,000円以上 100,000円未満</div>
-                                  <p className="pl-8">→ 660円</p>
-                                </div>
-                              </li>
-                              <li>
-                                <div>
-                                  <div>・30,000円以上 100,000円未満</div>
-                                  <p className="pl-8">→ 660円</p>
-                                </div>
-                              </li>
-                              <li>
-                                <div>
-                                  <div>・100,000円以上 300,000円未満</div>
-                                  <p className="pl-8">→ 1,100円</p>
-                                </div>
-                              </li>
-                            </ul>
-                          </PopoverContent>
-                        </Popover>
-                      )}
-                    </div>
-                    <p className="text-foreground font-semibold">
-                      {option.name}
-                    </p>
-                    <p className="text-muted-foreground mt-2 text-xs">
-                      {option.description}
-                    </p>
+                  <div className="relative">
+                    <RadioGroupItem
+                      value={option.method}
+                      id={option.method}
+                      className={cn("mt-4 ml-4", disabled && "opacity-0")}
+                      disabled={disabled}
+                    />
+                    {disabled && (
+                      <CircleSlash2 className="absolute right-0 bottom-1 size-4 opacity-10" />
+                    )}
                   </div>
-                </Label>
-              </div>
-            ))}
+                  <Label
+                    htmlFor={option.method}
+                    className={cn(
+                      "-ml-8 flex-1 p-4 pl-12",
+                      !disabled && "cursor-pointer",
+                    )}
+                  >
+                    <div>
+                      <div className="mb-3 flex items-center justify-between text-4xl">
+                        {option.icon}
+                        {option.method === "cod" && (
+                          <Popover>
+                            <PopoverTrigger className="text-muted-foreground flex text-xs underline">
+                              <CircleQuestionMark className="mx-1 size-4" />
+                              手数料
+                            </PopoverTrigger>
+                            <PopoverContent className="w-fit space-y-2.5 text-base">
+                              <div className="font-bold">
+                                代引き手数料
+                                <span className="text-muted-foreground ml-1 text-sm">
+                                  (税込み)
+                                </span>
+                              </div>
+                              <ul className="space-y-1 text-sm">
+                                <li>
+                                  <div>
+                                    <div>・商品購入金額 10,000円未満</div>
+                                    <p className="pl-8">→ 330円</p>
+                                  </div>
+                                </li>
+                                <li>
+                                  <div>
+                                    <div>・10,000円以上 30,000円未満</div>
+                                    <p className="pl-8">→ 440円</p>
+                                  </div>
+                                </li>
+                                <li>
+                                  <div>
+                                    <div>・30,000円以上 100,000円未満</div>
+                                    <p className="pl-8">→ 660円</p>
+                                  </div>
+                                </li>
+                                <li>
+                                  <div>
+                                    <div>・30,000円以上 100,000円未満</div>
+                                    <p className="pl-8">→ 660円</p>
+                                  </div>
+                                </li>
+                                <li>
+                                  <div>
+                                    <div>・100,000円以上 300,000円未満</div>
+                                    <p className="pl-8">→ 1,100円</p>
+                                  </div>
+                                </li>
+                              </ul>
+                            </PopoverContent>
+                          </Popover>
+                        )}
+                      </div>
+                      <p className="text-foreground font-semibold">
+                        {option.name}
+                      </p>
+                      <p className="text-muted-foreground mt-2 text-xs">
+                        {option.description}
+                      </p>
+                    </div>
+                  </Label>
+                </div>
+              )
+            })}
           </RadioGroup>
         </section>
         {state.type === "ERROR" && (

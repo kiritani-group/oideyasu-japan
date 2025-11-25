@@ -28,6 +28,7 @@ export default async function Page() {
     cart.payment?.method === "convenience" && subtotalAmount <= 3300
       ? undefined
       : cart.payment
+  const isGift = cart.isGift
   return (
     <Card>
       <CardHeader>
@@ -36,7 +37,11 @@ export default async function Page() {
           お届け日のご希望や支払方法を選んでください。
         </CardDescription>
       </CardHeader>
-      <DeriveryForm paymentDefault={payment} subtotalAmount={subtotalAmount} />
+      <DeriveryForm
+        paymentDefault={payment}
+        subtotalAmount={subtotalAmount}
+        isGift={isGift}
+      />
     </Card>
   )
 }
