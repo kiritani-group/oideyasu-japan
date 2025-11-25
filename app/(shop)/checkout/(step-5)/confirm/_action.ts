@@ -9,6 +9,7 @@ import {
 import prisma from "@/lib/prisma"
 import { redis } from "@/lib/redis"
 import { generateOrderNumber } from "@/lib/utils/generate-order-number"
+import { updateTag } from "next/cache"
 import { redirect } from "next/navigation"
 import Stripe from "stripe"
 import { getData } from "./_data"
@@ -49,10 +50,19 @@ export async function confirmAction(): Promise<ActionState> {
     const pi = await stripe.paymentIntents.create({
       amount: cart.totalAmount,
       currency: "jpy",
-      // Let Stripe decide which payment methods to offer based on
-      // currency, amount and buyer's location. This enables Apple Pay
-      // and Google Pay to be surfaced by PaymentElement when available.
-      automatic_payment_methods: { enabled: true },
+      ...(cart.payment.method === "convenience"
+        ? {
+            automatic_payment_methods: {
+              enabled: true,
+            },
+          }
+        : {
+            automatic_payment_methods: {
+              enabled: true,
+            },
+            excluded_payment_method_types: ["konbini"],
+          }),
+      receipt_email: cart.buyer.email,
     })
     paymentCreateWithoutOrderInput = {
       provider: "STRIPE",
@@ -61,6 +71,9 @@ export async function confirmAction(): Promise<ActionState> {
       status: "PENDING",
     }
   }
+  let order:
+    | { id: string; userId: string | null; orderNumber: string }
+    | undefined
   try {
     const orderCreateInput: Omit<OrderCreateInput, "orderNumber"> = {
       user: { connect: { id: cart.user.id } },
@@ -129,13 +142,12 @@ export async function confirmAction(): Promise<ActionState> {
         create: paymentCreateWithoutOrderInput,
       },
     }
-    let order
     for (let attempt = 0; attempt < 5; attempt++) {
       const orderNumber = generateOrderNumber()
       try {
         order = await prisma.order.create({
           data: { ...orderCreateInput, orderNumber },
-          select: { id: true },
+          select: { id: true, userId: true, orderNumber: true },
         })
         break
       } catch (e: any) {
@@ -147,6 +159,17 @@ export async function confirmAction(): Promise<ActionState> {
       }
     }
     if (order) {
+      if (paymentCreateWithoutOrderInput.providerPaymentId) {
+        await stripe.paymentIntents.update(
+          paymentCreateWithoutOrderInput.providerPaymentId,
+          {
+            metadata: {
+              order_number: order.orderNumber,
+              user_id: order.userId,
+            },
+          },
+        )
+      }
       const cartKey = getCartKey(user.id)
       await redis.hset(cartKey, { order: { id: order.id } })
       await refreshCartTTL(cartKey)
@@ -159,6 +182,13 @@ export async function confirmAction(): Promise<ActionState> {
       message:
         "サーバーエラーが発生しました。繰り返し問題が発生する場合は、しばらくたってから再度お試しください。",
     }
+  }
+  if (cart.payment.method === "cod") {
+    const cartKey = getCartKey(user.id)
+    await redis.hset(cartKey, { items: [] })
+    await redis.hdel(cartKey, "recipient", "isGift", "payment", "order")
+    updateTag("cart")
+    redirect(`/checkout/thanks?cod_mode=true&order_number=${order.orderNumber}`)
   }
   redirect("/checkout/payment")
 }
