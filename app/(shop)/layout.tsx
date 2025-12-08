@@ -1,6 +1,6 @@
 import "@/app/globals.css"
 import { AppSidebar } from "@/components/layout/app-sidevar"
-import ShoppingCartDrawerDialog from "@/components/layout/shopping/header-drawer-dialog"
+import { CartServer } from "@/components/layout/shopping/cart-server"
 import {
   SidebarInset,
   SidebarProvider,
@@ -11,6 +11,7 @@ import type { Metadata } from "next"
 import { Noto_Sans_JP } from "next/font/google"
 import Image from "next/image"
 import Link from "next/link"
+import { Suspense } from "react"
 
 const notoSansJp = Noto_Sans_JP({
   subsets: ["latin"],
@@ -35,7 +36,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="ja">
       <body className={`${notoSansJp.className} antialiased`}>
         <SidebarProvider>
           <SidebarInset>
@@ -46,6 +47,7 @@ export default function RootLayout({
                     src={Logo}
                     alt="おいで康のロゴ"
                     fill
+                    sizes="48px"
                     className="rounded-full object-cover"
                   />
                 </div>
@@ -54,9 +56,11 @@ export default function RootLayout({
                   おいで康
                 </h1>
               </Link>
-              <div className="gap- flex items-center gap-2">
-                <ShoppingCartDrawerDialog />
-                <SidebarTrigger className="mr-2" />
+              <div className="flex items-center gap-2">
+                <Suspense>
+                  <CartServer />
+                </Suspense>
+                <SidebarTrigger className="size-8" />
               </div>
             </header>
             <main className="@container relative flex-1">
@@ -72,7 +76,7 @@ export default function RootLayout({
               </div>
               <div className="relative z-10 mx-auto max-w-5xl">{children}</div>
             </main>
-            <footer className="flex flex-col items-center justify-center border-t p-6">
+            <footer className="text-foreground/70 flex flex-col items-center justify-center border-t p-6">
               <p>© 旬菜鮮魚と炭火焼 おいで康</p>
               <Link href="tel:0776280828">0776-28-0828</Link>
               <p>福井県福井市堀ノ宮1-325</p>

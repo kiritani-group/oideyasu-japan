@@ -1,0 +1,41 @@
+model Product {
+  id              String         @id @default(cuid())
+  name            String
+  slug            String
+  description     String?
+  thumbnailUrl    String?
+  images          ProductImage[]
+  price           Int
+  stock           Int            @default(0)
+  isInStock       Boolean        @default(true)
+  isActive        Boolean        @default(false)
+  deliveryMinDays Int?
+  deliveryMaxDays Int?
+  categoryId      String?
+  category        Category?      @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  displayOrder    Int?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  deletedAt       DateTime?
+
+  orders OrderItem[]
+}
+
+model ProductImage {
+  id        String   @id @default(cuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url       String
+  order     Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Category {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  slug      String    @unique
+  products  Product[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}

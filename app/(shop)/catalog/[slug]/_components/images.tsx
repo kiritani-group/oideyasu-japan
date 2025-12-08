@@ -1,21 +1,29 @@
 "use client"
 
 import { Card } from "@/components/ui/card"
-import type { Product } from "@/data/products"
 import { cn } from "@/lib/utils"
 import Image from "next/image"
 import { useState } from "react"
 
-export default function ProductImages({ product }: { product: Product }) {
+export default function ProductImages({
+  product,
+}: {
+  product: {
+    name: string
+    images: {
+      url: string
+    }[]
+  }
+}) {
   const [selectedImage, setSelectedImage] = useState(0)
   return (
     <div className="space-y-4">
       <Card className="border-border bg-card overflow-hidden p-2">
         <div className="bg-muted flex aspect-square items-center justify-center overflow-hidden rounded-lg">
-          {product.images && product.images[selectedImage] ? (
+          {product.images && product.images[selectedImage]?.url ? (
             <Image
-              src={product.images[selectedImage]}
-              alt={product.title}
+              src={product.images[selectedImage].url}
+              alt={product.name}
               priority
               fetchPriority="high"
               className="h-full w-full object-contain"
@@ -41,8 +49,8 @@ export default function ProductImages({ product }: { product: Product }) {
               )}
             >
               <Image
-                src={image}
-                alt={`${product.title} view ${index + 1}`}
+                src={image.url}
+                alt={`${product.name} view ${index + 1}`}
                 sizes="30vw"
                 className={cn(
                   "h-full w-full object-cover",

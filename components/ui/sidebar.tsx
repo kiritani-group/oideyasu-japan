@@ -2,7 +2,7 @@
 
 import { Slot } from "@radix-ui/react-slot"
 import { cva, VariantProps } from "class-variance-authority"
-import { MenuIcon } from "lucide-react"
+import { MenuIcon, SidebarIcon } from "lucide-react"
 import * as React from "react"
 
 import { Button } from "@/components/ui/button"
@@ -274,6 +274,32 @@ function SidebarTrigger({
       {...props}
     >
       <MenuIcon className="size-7" />
+      <span className="sr-only">サイドメニューを開閉</span>
+    </Button>
+  )
+}
+
+function AdminSidebarTrigger({
+  className,
+  onClick,
+  ...props
+}: React.ComponentProps<typeof Button>) {
+  const { toggleSidebar } = useSidebar()
+
+  return (
+    <Button
+      data-sidebar="trigger"
+      data-slot="sidebar-trigger"
+      variant="ghost"
+      size="icon"
+      className={cn("size-9", className)}
+      onClick={(event) => {
+        onClick?.(event)
+        toggleSidebar()
+      }}
+      {...props}
+    >
+      <SidebarIcon className="size-5" />
       <span className="sr-only">サイドメニューを開閉</span>
     </Button>
   )
@@ -702,6 +728,7 @@ function SidebarMenuSubButton({
 }
 
 export {
+  AdminSidebarTrigger,
   Sidebar,
   SidebarContent,
   SidebarFooter,
