@@ -1,5 +1,4 @@
 import PageTitle from "@/components/page/page-title"
-import { products } from "@/data/products"
 import HeadImage from "@/public/catalog/salmon-smoked-jerky/salmon-smoked-jerky_01.jpg"
 import type { Metadata } from "next"
 import Image from "next/image"
@@ -10,7 +9,6 @@ export const metadata: Metadata = {
 }
 
 export default function Page() {
-  const otsumamiItems = products.filter((item) => item.category === "OTSUMAMI")
   return (
     <>
       <PageTitle title="お取り寄せ - 通販くらぶ" subTitle="おつまみ・珍味" />

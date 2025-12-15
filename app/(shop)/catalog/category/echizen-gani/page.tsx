@@ -1,5 +1,4 @@
 import PageTitle from "@/components/page/page-title"
-import { products } from "@/data/products"
 import Echizengani from "@/public/echizen-gani.jpg"
 import type { Metadata } from "next"
 import Image from "next/image"
@@ -9,8 +8,7 @@ export const metadata: Metadata = {
   title: "越前がに 通販くらぶ",
 }
 
-export default function Page() {
-  const kaniItems = products.filter((item) => item.category === "KANI")
+export default async function Page() {
   return (
     <>
       <PageTitle title="お取り寄せ - 通販くらぶ" subTitle="越前がに" />
