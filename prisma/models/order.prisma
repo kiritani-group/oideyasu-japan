@@ -35,12 +35,13 @@ model Order {
 }
 
 enum OrderStatus {
-  PENDING
-  SHIPPED_PENDING_PAYMENT
-  PAID
-  SHIPPED
-  DELIVERED
-  CANCELED
+  PENDING // 入金待ち
+  READY_TO_SHIP // 代引きの場合の発送待ち
+  PAID // 入金済みで発送待ち
+  SHIPPED_PENDING_PAYMENT //　代引きの場合の発送済み（入金待ち）
+  SHIPPED // 発送済み
+  DELIVERED // 配達完了
+  CANCELED // キャンセル
 }
 
 model OrderItem {
